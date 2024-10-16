@@ -1,0 +1,79 @@
+name: spato_mobile_app
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.6
+  get_cli: any
+  get_storage: ^2.1.1
+  http: ^1.1.0
+  intl: ^0.18.1
+  logger: ^2.0.1
+  url_launcher: ^6.1.12
+  flutter_native_splash: ^2.4.0
+  smooth_page_indicator: ^1.1.0
+  flutter_svg: ^2.0.10+1
+  readmore: ^2.2.0
+  carousel_slider: ^4.2.1
+  flutter_rating_bar: ^4.0.1
+  capped_progress_indicator: ^0.0.2
+  image_picker: ^1.1.2
+  permission_handler: ^11.3.1
+  flutter_rating_stars: ^1.1.0
+  file_picker: ^8.0.5
+  pin_code_fields: ^8.0.1
+  iconsax: ^0.0.8
+  shared_preferences: ^2.2.3
+  fluttertoast: ^8.2.8
+  get: 4.6.6
+  cached_network_image: ^3.3.1
+  lottie: ^3.1.2
+  dio: ^5.5.0+1
+  path_provider: ^2.1.4
+  flutter_pdfview: ^1.2.9
+  docx_to_text: ^1.0.1
+  flutter_launcher_icons: ^0.13.1
+  open_file: ^3.3.2
+  flutter_staggered_grid_view: ^0.7.0
+
+
+
+
+  flutter: 
+    sdk: flutter
+  firebase_core: ^3.6.0
+  firebase_messaging: ^15.1.3
+  flutter_local_notifications: ^17.2.3
+  firebase_cloud_messaging_flutter: ^1.0.6
+  intl_phone_field: ^3.2.0
+  printing: ^5.13.3
+  pdf: ^3.11.1
+  badges: ^3.1.2
+
+dev_dependencies: 
+  flutter_lints: ^3.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/ic_launcher.png"
+
+flutter: 
+  assets: 
+    - assets/logos/
+    - assets/icons/
+    - assets/images/
+    - assets/jsons/
+    - assets/pdf/
+    - assets/docx/
+  fonts:
+    - family: SFPro
+      fonts:
+        - asset: assets/fonts/SF-Pro.ttf
+  uses-material-design: true
+

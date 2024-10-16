@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "566627742789",
+    "project_id": "notification-for-android-485",
+    "storage_bucket": "notification-for-android-485.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566627742789:android:0eb48f534de0f84d74df2c",
+        "android_client_info": {
+          "package_name": "com.spato"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDKSytCnZbWvIJzbE8mG1aqcOEuPsPy8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566627742789:android:cbb62400fbb3ae4574df2c",
+        "android_client_info": {
+          "package_name": "spato.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDKSytCnZbWvIJzbE8mG1aqcOEuPsPy8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
