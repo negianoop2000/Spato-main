@@ -161,7 +161,7 @@ class MyOrderScreenView extends StatelessWidget {
                               borderColor: borderColor,
                               onPressed: () {
                                 print("dfgsdfgh ${order['Angebots_Nr'] ?? ''}");
-                                controller.navigateToDetailView( order['Angebots_Nr'] ?? '');
+                                controller.navigateToDetailView( order['Angebots_Nr'] ?? '',order['Angebots_Nr'] ?? "");
                               },
                               buttonText: order['status'] ?? "",
                             ),

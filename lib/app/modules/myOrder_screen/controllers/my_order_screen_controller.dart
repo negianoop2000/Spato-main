@@ -57,12 +57,12 @@ class MyOrderScreenController extends GetxController with SingleGetTickerProvide
     }
   }
 
-  void navigateToDetailView(String OrderID) async {
+  void navigateToDetailView(String OrderID, String ordernumber) async {
     try {
       isLoading(true);
       var response = await ApiService().B2cgetOrdersDetails(OrderID);
       if (response != null && response['ordersDtl'] != null) {
-        final result = await Get.to(() => DetailOrder_b2c_View(orderDetails: response));
+        final result = await Get.to(() => DetailOrder_b2c_View(orderDetails: response,ordernumber:ordernumber));
 
         if (result == true) {
           showSparePartHistory();
