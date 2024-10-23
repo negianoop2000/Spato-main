@@ -889,7 +889,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse('${"http://192.168.1.13:8000/" + notifications}'),
+      Uri.parse('${"http://192.168.1.17:8000" + notifications}'),
       headers: {
         'Authorization': 'Bearer 139|nfaR6RVohfurM1GIwELLh6Og93jg2fS1Zr8Dpxysc3b57167',        "Content-Type": "application/json",
       },
@@ -902,7 +902,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.post(
-      Uri.parse('${"http://192.168.1.13:8000/$readnotification"}?notification_id=$id'),
+      Uri.parse('${"http://192.168.1.17:8000/$readnotification"}?notification_id=$id'),
       headers: {
         'Authorization': 'Bearer 139|nfaR6RVohfurM1GIwELLh6Og93jg2fS1Zr8Dpxysc3b57167',
         "Content-Type": "application/json",
@@ -916,7 +916,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.post(
-      Uri.parse('${"http://192.168.1.13:8000/$deletenotification"}?notification_id=$id'),
+      Uri.parse('${"http://192.168.1.17:8000/$deletenotification"}?notification_id=$id'),
       headers: {
         'Authorization': 'Bearer 139|nfaR6RVohfurM1GIwELLh6Og93jg2fS1Zr8Dpxysc3b57167',
         "Content-Type": "application/json",
