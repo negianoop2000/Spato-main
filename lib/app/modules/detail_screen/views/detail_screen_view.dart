@@ -2,11 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:spato_mobile_app/app/data/model/detail_data_model.dart';
-import 'package:spato_mobile_app/app/data/model/products_list.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/common/common_app_buttons.dart';
 import 'package:spato_mobile_app/common/ratingbar.dart';
@@ -27,7 +24,7 @@ class DetailScreenView extends StatelessWidget {
   void _scrollToTop() {
     _scrollController.animateTo(
       0.0,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
   }
@@ -35,7 +32,7 @@ class DetailScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("4895236665856566");
-    print("${controller.productDetail.value.preisZzglMwSt ?? ''}");
+    print(controller.productDetail.value.preisZzglMwSt ?? '');
     Color colorsecondary = Theme.of(context).brightness == Brightness.light
         ? TColors.colorsecondaryLight
         : TColors.colorsecondaryDark;
@@ -88,7 +85,14 @@ class DetailScreenView extends StatelessWidget {
           actions: [
             InkWell(
               onTap: () {
-                Get.toNamed(Routes.REQUEST_QUOTE_SCREEN,arguments: controller.productDetail.value.id ?? '' );
+                Get.toNamed(
+                  Routes.REQUEST_QUOTE_SCREEN,
+                  arguments: {
+                    "productID": controller.productDetail.value.id?.toString() ?? '',
+                    "productCode": controller.productDetail.value.katalogArtNummer ?? '',
+                  },
+                );
+
 
               },
               child: Padding(
@@ -101,30 +105,28 @@ class DetailScreenView extends StatelessWidget {
           centerTitle: true,
         ),
 
-        bottomNavigationBar: Obx( () => Container(height: 60,
+        bottomNavigationBar: Obx( () => SizedBox(height: 60,
             child: Padding(
               padding: const EdgeInsets.only(left: 15,right: 15,bottom: 18),
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InkWell(
-                            onTap: () => controller.decrementCount(),
-                            child: SvgPicture.asset(TImages.iconminus,height: 30,width: 30,),
-                          ),
-                          Text(
-                            '${controller.productQuantitycount.toString().padLeft(2, '0')}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          InkWell(
-                            onTap: () => controller.incrementCount(),
-                            child: SvgPicture.asset(TImages.iconplus,height: 30,width: 30,),
-                          ),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () => controller.decrementCount(),
+                          child: SvgPicture.asset(TImages.iconminus,height: 30,width: 30,),
+                        ),
+                        Text(
+                          controller.productQuantitycount.toString().padLeft(2, '0'),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        InkWell(
+                          onTap: () => controller.incrementCount(),
+                          child: SvgPicture.asset(TImages.iconplus,height: 30,width: 30,),
+                        ),
+                      ],
                     ),
                   ),
                   Expanded(
@@ -177,15 +179,12 @@ class DetailScreenView extends StatelessWidget {
                                   controller.currentPage = index;
                                 },
                                 itemBuilder: (context, index) {
-
                                   String imageUrl = controller.images[index];
-
-
                                   return CachedNetworkImage(
                                     imageUrl: imageUrl,
-                                    placeholder: (context, url) => Center(
+                                    placeholder: (context, url) => const Center(
                                       child: Padding(
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: EdgeInsets.all(20.0),
                                         child: CircularProgressIndicator(),
                                       ),
                                     ),
@@ -194,15 +193,7 @@ class DetailScreenView extends StatelessWidget {
                                   );
                                 },
                               )
-
                             ),
-                            // Positioned(
-                            //   top: 20,
-                            //   right: 20,
-                            //   child: SvgPicture.asset(
-                            //     TImages.iconheart,
-                            //   ),
-                            // ),
                             Positioned(
                               bottom: 20,
                               left: 0,
@@ -211,7 +202,7 @@ class DetailScreenView extends StatelessWidget {
                                 child: SmoothPageIndicator(
                                   controller: controller.pageController,
                                   count: controller.images.length,
-                                  effect: WormEffect(
+                                  effect: const WormEffect(
                                     dotHeight: 8,
                                     dotWidth: 8,
                                     activeDotColor: TColors.colorsecondaryLight, // Customize as needed
@@ -223,48 +214,47 @@ class DetailScreenView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
-                          CommonAppButton(
-                            width: 143,
-                            height: 26,
-                            borderRadius: 8,
-                            color: TColors.colorGreenShine,
-                            onPressed: () {
-
-                            },
-                            buttonText: controller.productDetail.value.availStatus == "Auf Lager" ? "Available In Stock" : "Not Available In Stock",
-                            btnTextStyle: AppTextStyles.textTitleLight.copyWith(fontSize: 13),
-                          ),
-
-                          Spacer(),
-
-                          Container(
-                            child: Column(
-                              children: [
-                                  Text("Exclusive VAT -",
-                                      style: AppTextStyles.textHeadingTitle.copyWith(fontSize: 12,
-                                          fontWeight: FontWeight.w400,color: colorsecondary)
-                                  ),
-                                Text("${controller.formatPrice("${controller.productDetail.value.preisZzglMwSt ?? ''}")}€",
-                                    style: AppTextStyles.textHeadingTitle.copyWith(fontSize: 19,
-                                        fontWeight: FontWeight.w600,color: colorsecondary)
+                        CommonAppButton(
+                        width: 143,
+                        height: 26,
+                        borderRadius: 8,
+                        color: controller.productDetail.value.availStatus == "Auf Lager"
+                            ? TColors.colorGreenShine
+                            : TColors.error,
+                        onPressed: () {
+                        },
+                        buttonText: controller.productDetail.value.availStatus == "Auf Lager"
+                            ? "Available In Stock"
+                            : "Not Available In Stock",
+                        btnTextStyle: AppTextStyles.textTitleLight.copyWith(fontSize: 13),
+                      ),
+                          const Spacer(),
+                          Column(
+                            children: [
+                                Text("Exclusive VAT -",
+                                    style: AppTextStyles.textHeadingTitle.copyWith(fontSize: 12,
+                                        fontWeight: FontWeight.w400,color: colorsecondary)
                                 ),
-                              ],
-                            ),
+                              Text("${controller.formatPrice(controller.productDetail.value.preisZzglMwSt ?? '')}€",
+                                  style: AppTextStyles.textHeadingTitle.copyWith(fontSize: 19,
+                                      fontWeight: FontWeight.w600,color: colorsecondary)
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       Align(alignment: Alignment.topLeft,
                         child: Text(
-                            "${controller.productDetail.value.artikelname ?? ''}",
+                            controller.productDetail.value.artikelname ?? '',
                             style: AppTextStyles.black24.copyWith(fontSize: 22,
                                 fontWeight: FontWeight.w600,color: colorsecondary)
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      const SizedBox(height: 5,),
                       // Row(
                       //   children: [
                       //     Text("⭐️", style: AppTextStyles.black16.copyWith(fontWeight: FontWeight.w700)),
@@ -274,11 +264,11 @@ class DetailScreenView extends StatelessWidget {
                       //   ],
                       // ),
                       Align(alignment: Alignment.topLeft,child: Text("Product code - ${controller.productDetail.value.herstellerArtikelnummer ?? ''}", style: AppTextStyles.grey16.copyWith(fontWeight: FontWeight.w700,color: colorsecondary))),
-                      SizedBox(height: 5,),
+                      const SizedBox(height: 5,),
                       Align(alignment: Alignment.topLeft,child: Text("Product info", style: AppTextStyles.black20.copyWith(fontSize: 17, fontWeight: FontWeight.w600,color: colorsecondary))),
-                      SizedBox(height: 5,),
-                      Align(alignment: Alignment.topLeft,child: Text("${controller.productDetail.value.beschreibungKurz ?? ''}", style: AppTextStyles.grey14.copyWith(fontWeight: FontWeight.w400,color: colorsecondary))),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 5,),
+                      Align(alignment: Alignment.topLeft,child: Text(controller.productDetail.value.beschreibungKurz ?? '', style: AppTextStyles.grey14.copyWith(fontWeight: FontWeight.w400,color: colorsecondary))),
+                      const SizedBox(height: 20),
                       Obx(() => GestureDetector(
                         onTap: () {
                           controller.toggleExpandedDetail(); // Use the toggle method to change the value
@@ -318,9 +308,9 @@ class DetailScreenView extends StatelessWidget {
                                         "Product info :",
                                         style: AppTextStyles.black16.copyWith(fontWeight: FontWeight.w600,color: colorsecondary),
                                       ),
-                                      SizedBox(height: 4,),
+                                      const SizedBox(height: 4,),
                                       Text(
-                                        "${controller.productDetail.value.beschreibungLang ?? ''}",
+                                        controller.productDetail.value.beschreibungLang ?? '',
                                         style: AppTextStyles.grey14,
                                       ),
                                     ],
@@ -331,7 +321,7 @@ class DetailScreenView extends StatelessWidget {
                         ),
                       )),
                       if(controller.spareParts.isNotEmpty)
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if(controller.spareParts.isNotEmpty)
                       GestureDetector(
                         onTap: () {
@@ -361,7 +351,7 @@ class DetailScreenView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
                           controller.toggleSpacification();
@@ -392,7 +382,7 @@ class DetailScreenView extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Divider(
+                                      const Divider(
                                         color: TColors.grey,height: 8,thickness: 1,
                                       ),
                                       if(controller.productDetail.value.einheit!= null)
@@ -403,14 +393,14 @@ class DetailScreenView extends StatelessWidget {
 
                                             ),),
                                           ),
-                                          SizedBox(width: 10,),
-                                          Text("${controller.productDetail.value.einheit ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                          const SizedBox(width: 10,),
+                                          Text(controller.productDetail.value.einheit ?? '',style:AppTextStyles.grey14.copyWith(
 
                                           ),),
                                         ],
                                       ),
                                       if(controller.productDetail.value.einheit!= null)
-                                      Divider(
+                                      const Divider(
                                         color: TColors.grey,height: 8,thickness: 1,
                                       ),
                                       if(controller.productDetail.value.veVpe!= null)
@@ -421,14 +411,14 @@ class DetailScreenView extends StatelessWidget {
 
                                             ),),
                                           ),
-                                          SizedBox(width: 10,),
-                                          Text("${controller.productDetail.value.veVpe ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                          const SizedBox(width: 10,),
+                                          Text(controller.productDetail.value.veVpe ?? '',style:AppTextStyles.grey14.copyWith(
 
                                           ),),
                                         ],
                                       ),
                                       if(controller.productDetail.value.veVpe!= null)
-                                      Divider(
+                                      const Divider(
                                         color: TColors.grey,height: 8,thickness: 1,
                                       ),
                                       if(controller.productDetail.value.material!= null)
@@ -439,14 +429,14 @@ class DetailScreenView extends StatelessWidget {
 
                                             ),),
                                           ),
-                                          SizedBox(width: 10,),
-                                          Text("${controller.productDetail.value.material ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                          const SizedBox(width: 10,),
+                                          Text(controller.productDetail.value.material ?? '',style:AppTextStyles.grey14.copyWith(
 
                                           ),),
                                         ],
                                       ),
                                       if(controller.productDetail.value.material!= null)
-                                      Divider(
+                                      const Divider(
                                         color: TColors.grey,height: 8,thickness: 1,
                                       ),
                                       if(controller.productDetail.value.m3H!= null)
@@ -457,14 +447,14 @@ class DetailScreenView extends StatelessWidget {
 
                                               ),),
                                             ),
-                                            SizedBox(width: 10,),
-                                            Text("${controller.productDetail.value.m3H ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                            const SizedBox(width: 10,),
+                                            Text(controller.productDetail.value.m3H ?? '',style:AppTextStyles.grey14.copyWith(
 
                                             ),),
                                           ],
                                         ),
                                       if(controller.productDetail.value.m3H!= null)
-                                        Divider(
+                                        const Divider(
                                           color: TColors.grey,height: 8,thickness: 1,
                                         ),
                                       if(controller.productDetail.value.gewicht!= null)
@@ -475,14 +465,14 @@ class DetailScreenView extends StatelessWidget {
 
                                             ),),
                                           ),
-                                          SizedBox(width: 10,),
-                                          Text("${controller.productDetail.value.gewicht ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                          const SizedBox(width: 10,),
+                                          Text(controller.productDetail.value.gewicht ?? '',style:AppTextStyles.grey14.copyWith(
 
                                           ),),
                                         ],
                                       ),
                                       if(controller.productDetail.value.gewicht!= null)
-                                      Divider(
+                                      const Divider(
                                         color: TColors.grey,height: 8,thickness: 1,
                                       ),
                                       if(controller.productDetail.value.lange!= null)
@@ -493,14 +483,14 @@ class DetailScreenView extends StatelessWidget {
 
                                             ),),
                                           ),
-                                          SizedBox(width: 10,),
-                                          Text("${controller.productDetail.value.lange ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                          const SizedBox(width: 10,),
+                                          Text(controller.productDetail.value.lange ?? '',style:AppTextStyles.grey14.copyWith(
 
                                           ),),
                                         ],
                                       ),
                                       if(controller.productDetail.value.lange!= null)
-                                      Divider(
+                                      const Divider(
                                         color: TColors.grey,height: 8,thickness: 1,
                                       ),
                                       if(controller.productDetail.value.breite!= null)
@@ -511,14 +501,14 @@ class DetailScreenView extends StatelessWidget {
 
                                             ),),
                                           ),
-                                          SizedBox(width: 10,),
-                                          Text("${controller.productDetail.value.breite ?? ''}",style:AppTextStyles.grey14.copyWith(
+                                          const SizedBox(width: 10,),
+                                          Text(controller.productDetail.value.breite ?? '',style:AppTextStyles.grey14.copyWith(
 
                                           ),),
                                         ],
                                       ),
                                       if(controller.productDetail.value.breite!= null)
-                                      Divider(
+                                      const Divider(
                                         color: TColors.white,height: 8,thickness: 1,
                                       ),
 
@@ -529,7 +519,7 @@ class DetailScreenView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
                           controller.toggleExpandedDownload(); // Use the toggle method to change the value
@@ -570,8 +560,8 @@ class DetailScreenView extends StatelessWidget {
                                       if ((controller.productDetail.value.anleitungPdf1?.isEmpty ?? true) &&
                                           (controller.productDetail.value.anleitungPdf2?.isEmpty ?? true) &&
                                           (controller.productDetail.value.anleitungPdf3?.isEmpty ?? true))
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 16.0),
                                           child: Center(
                                             child: Text(
                                               "No Documents",
@@ -586,7 +576,7 @@ class DetailScreenView extends StatelessWidget {
                                         if (controller.productDetail.value.anleitungPdf1?.isNotEmpty ?? false)
                                           Column(
                                             children: [
-                                              Divider(
+                                              const Divider(
                                                 color: TColors.white,
                                                 height: 8,
                                                 thickness: 1,
@@ -597,8 +587,8 @@ class DetailScreenView extends StatelessWidget {
                                                 },
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.file_copy_outlined, color: TColors.colorlightgrey, size: 14),
-                                                    SizedBox(width: 10),
+                                                    const Icon(Icons.file_copy_outlined, color: TColors.colorlightgrey, size: 14),
+                                                    const SizedBox(width: 10),
                                                     Expanded(
                                                       child: Text(
                                                         "${controller.productDetail.value.anleitungPdf1}",
@@ -616,7 +606,7 @@ class DetailScreenView extends StatelessWidget {
                                         if (controller.productDetail.value.anleitungPdf2?.isNotEmpty ?? false)
                                           Column(
                                             children: [
-                                              Divider(
+                                              const Divider(
                                                 color: TColors.white,
                                                 height: 8,
                                                 thickness: 1,
@@ -627,8 +617,8 @@ class DetailScreenView extends StatelessWidget {
                                                 },
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.file_copy_outlined, color: TColors.colorlightgrey, size: 14),
-                                                    SizedBox(width: 10),
+                                                    const Icon(Icons.file_copy_outlined, color: TColors.colorlightgrey, size: 14),
+                                                    const SizedBox(width: 10),
                                                     Expanded(
                                                       child: Text(
                                                         "${controller.productDetail.value.anleitungPdf2}",
@@ -646,7 +636,7 @@ class DetailScreenView extends StatelessWidget {
                                         if (controller.productDetail.value.anleitungPdf3?.isNotEmpty ?? false)
                                           Column(
                                             children: [
-                                              Divider(
+                                              const Divider(
                                                 color: TColors.white,
                                                 height: 8,
                                                 thickness: 1,
@@ -657,8 +647,8 @@ class DetailScreenView extends StatelessWidget {
                                                 },
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.file_copy_outlined, color: TColors.colorlightgrey, size: 14),
-                                                    SizedBox(width: 10),
+                                                    const Icon(Icons.file_copy_outlined, color: TColors.colorlightgrey, size: 14),
+                                                    const SizedBox(width: 10),
                                                     Expanded(
                                                       child: Text(
                                                         "${controller.productDetail.value.anleitungPdf3}",
@@ -681,7 +671,7 @@ class DetailScreenView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
 
                       Container(
@@ -698,15 +688,15 @@ class DetailScreenView extends StatelessWidget {
                           children: [
                             // Rating and stars
                             Container(
-                              padding: EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     "${controller.rating.toStringAsFixed(1)}/5.0",
-                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   StarDisplay(value: controller.rating.value), // Display stars
                                 ],
                               ),
@@ -732,7 +722,7 @@ class DetailScreenView extends StatelessWidget {
                       ),
 
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Obx(() => GestureDetector(
                         onTap: () {
                           controller.toggleExpandedReview(); // Use the toggle method to change the value
@@ -775,7 +765,7 @@ class DetailScreenView extends StatelessWidget {
                                           style: AppTextStyles.grey14.copyWith(color: colorsecondary),
                                         ),
                                       ),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: 10),
                                       Align(
                                         alignment: Alignment.center,
                                         child: RatingStars(
@@ -793,7 +783,7 @@ class DetailScreenView extends StatelessWidget {
                                           starSpacing: 2.0,
                                           maxValueVisibility: true,
                                           valueLabelVisibility: false,
-                                          animationDuration: Duration(milliseconds: 1000),
+                                          animationDuration: const Duration(milliseconds: 1000),
                                           valueLabelPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
                                           valueLabelMargin: const EdgeInsets.only(right: 8),
                                           starOffColor: TColors.colorlightgrey,
@@ -802,12 +792,12 @@ class DetailScreenView extends StatelessWidget {
                                           valueLabelTextStyle: AppTextStyles.grey16.copyWith(color: Colors.transparent),
                                         ),
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(
                                         "Write your feedback here:",
                                         style: AppTextStyles.black16.copyWith(color: colorsecondary),
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       TextInputField(
                                         maxLines: 4,
                                         maxLength: 250,
@@ -816,14 +806,14 @@ class DetailScreenView extends StatelessWidget {
                                         hintText: "Type here...",
                                         onTap: () {},
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       CommonAppButton(
                                         width: double.infinity,
                                         color: TColors.colorprimaryLight,
                                         onPressed: () {
                                           print("Rating: ${controller.ratingSubmit.value}");
                                           print("Feedback: ${controller.reviewController.text}");
-                                          controller.reviewRating("${controller.ratingSubmit.value}", "${controller.reviewController.text}","${controller.productDetail.value.id ?? ''}");
+                                          controller.reviewRating("${controller.ratingSubmit.value}", controller.reviewController.text,"${controller.productDetail.value.id ?? ''}");
                                         },
                                         buttonText: "Submit",
                                         btnTextStyle: AppTextStyles.textTitleMedium.copyWith(fontSize: 17),
@@ -835,7 +825,7 @@ class DetailScreenView extends StatelessWidget {
                           ),
                         ),
                       )),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if(controller.review.isNotEmpty)
                       Row(
                         children: [
@@ -845,7 +835,7 @@ class DetailScreenView extends StatelessWidget {
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600, color: colorsecondary),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           InkWell(
                             onTap: () {
                               if (controller.review.isNotEmpty) {
@@ -862,7 +852,7 @@ class DetailScreenView extends StatelessWidget {
                                     color: TColors.colorprimaryLight,
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                const SizedBox(width: 10,),
                                 SvgPicture.asset(
                                   TImages.iconForwardThemem,
                                 ),
@@ -872,7 +862,7 @@ class DetailScreenView extends StatelessWidget {
 
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if(controller.productsClam.isNotEmpty)
                       Align(alignment: Alignment.topLeft,
                         child: Text(
@@ -890,7 +880,7 @@ class DetailScreenView extends StatelessWidget {
                         ),
                       ),
                       if(controller.productsClam.isNotEmpty)
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if(controller.productsClam.isNotEmpty)
                       // Container(height: 200,
                       //   child: ListView.separated(
@@ -985,11 +975,11 @@ class DetailScreenView extends StatelessWidget {
 
                       ///////////
 
-                      Container(
+                      SizedBox(
                         height: 200,
                         child: ListView.separated(
                           itemCount: controller.productsClam.length,
-                          separatorBuilder: (context, index) => SizedBox(height: 8),
+                          separatorBuilder: (context, index) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
                             final product = controller.productsClam[index];
                             String fullImageUrl = ApiService.imageUrl;
@@ -1009,7 +999,7 @@ class DetailScreenView extends StatelessWidget {
                                   controller.getDetailPageApi(product.id!, product.kategorie1!);
                                   _scrollToTop();
                                 } else {
-                                  Get.snackbar('Error', 'Invalid product data', duration: Duration(seconds: 1));
+                                  Get.snackbar('Error', 'Invalid product data', duration: const Duration(seconds: 1));
                                 }
                               },
                               child: Row(
@@ -1031,9 +1021,9 @@ class DetailScreenView extends StatelessWidget {
                                         child: product.imageUrl != null && product.imageUrl!.isNotEmpty
                                             ? CachedNetworkImage(
                                           imageUrl: product.imageUrl!,
-                                          placeholder: (context, url) => Center(
+                                          placeholder: (context, url) => const Center(
                                             child: Padding(
-                                              padding: const EdgeInsets.all(20.0),
+                                              padding: EdgeInsets.all(20.0),
                                               child: CircularProgressIndicator(),
                                             ),
                                           ),
@@ -1044,7 +1034,7 @@ class DetailScreenView extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -1061,7 +1051,7 @@ class DetailScreenView extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Align(
                                     alignment: Alignment.topRight,
                                     child: Text(
@@ -1080,7 +1070,7 @@ class DetailScreenView extends StatelessWidget {
 
 
                       if(controller.relateProducts.isNotEmpty)
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if(controller.relateProducts.isNotEmpty)
                       Row(
                         children: [
@@ -1089,14 +1079,14 @@ class DetailScreenView extends StatelessWidget {
                               style: AppTextStyles.black20.copyWith(fontSize: 20,
                                   fontWeight: FontWeight.w600,color: colorsecondary)
                           ),
-                          Spacer(),
+                          const Spacer(),
                           SvgPicture.asset(
                             "assets/images/button_SeeAll.svg",
                           ),
                         ],
                       ),
                       if(controller.relateProducts.isNotEmpty)
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       if(controller.relateProducts.isNotEmpty)
                       // Container(height: 220,
                       //   child: GridView.builder(
@@ -1319,11 +1309,11 @@ class DetailScreenView extends StatelessWidget {
                         //   }),
                         // )
 
-                        Container(
+                        SizedBox(
                           height: 220,
                           child: Obx(() {
                             if (controller.relateProducts.isEmpty) {
-                              return Center(
+                              return const Center(
                                 child: Text(
                                   'No Related Product',
                                   style: TextStyle(fontSize: 16, color: Colors.black54),
@@ -1356,7 +1346,7 @@ class DetailScreenView extends StatelessWidget {
                                           _scrollToTop();
                                         },
                                         child: Container(
-                                          margin: EdgeInsets.all(5),
+                                          margin: const EdgeInsets.all(5),
                                           decoration: BoxDecoration(
                                             color: TColors.colorprimaryLight.withOpacity(.10),
                                             borderRadius: BorderRadius.circular(15),
@@ -1380,9 +1370,9 @@ class DetailScreenView extends StatelessWidget {
                                                       child: product.imageUrl != null && product.imageUrl!.isNotEmpty
                                                           ? CachedNetworkImage(
                                                         imageUrl: product.imageUrl!,
-                                                        placeholder: (context, url) => Center(
+                                                        placeholder: (context, url) => const Center(
                                                           child: Padding(
-                                                            padding: const EdgeInsets.all(20.0),
+                                                            padding: EdgeInsets.all(20.0),
                                                             child: CircularProgressIndicator(),
                                                           ),
                                                         ),
@@ -1394,7 +1384,7 @@ class DetailScreenView extends StatelessWidget {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(height: 5),
+                                                const SizedBox(height: 5),
                                                 Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
@@ -1404,7 +1394,7 @@ class DetailScreenView extends StatelessWidget {
                                                       maxLines: 2,
                                                       overflow: TextOverflow.ellipsis,
                                                     ),
-                                                    SizedBox(height: 4),
+                                                    const SizedBox(height: 4),
                                                     Row(
                                                       children: [
                                                         Text("⭐️",
@@ -1427,14 +1417,14 @@ class DetailScreenView extends StatelessWidget {
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(height: 4),
+                                                    const SizedBox(height: 4),
                                                     Row(
                                                       children: [
                                                         Text("${product.price!}€",
                                                             style: AppTextStyles.textTitleMedium.copyWith(
                                                                 fontWeight: FontWeight.w700,
-                                                                fontSize: 15)),
-                                                        Spacer(),
+                                                                color: TColors.colorprimaryDark,                                                                fontSize: 15)),
+                                                        const Spacer(),
                                                         InkWell(
                                                           onTap: () {
                                                             print("Add to cart");

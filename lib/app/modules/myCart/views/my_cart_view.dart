@@ -20,6 +20,8 @@ import '../controllers/my_cart_controller.dart';
 
 
 class MyCartView extends StatelessWidget {
+  const MyCartView({super.key});
+
 @override
   Widget build(BuildContext context) {
     final MyCartController controller = Get.find<MyCartController>(tag: 'cart');
@@ -85,9 +87,9 @@ class MyCartView extends StatelessWidget {
                                 child: Obx(
                                       () => CachedNetworkImage(
                                     imageUrl: "$fullImageUrl${controller.userImage.value}",
-                                    placeholder: (context, url) => Center(
+                                    placeholder: (context, url) => const Center(
                                       child: Padding(
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: EdgeInsets.all(20.0),
                                         child: CircularProgressIndicator(),
                                       ),
                                     ),
@@ -98,34 +100,26 @@ class MyCartView extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           Text(
                             "Deliver to ${controller.userName.value}",
                             style: AppTextStyles.black14.copyWith(fontWeight: FontWeight.w600, color: colorsecondary),
                           ),
-                          Spacer(),
-                          // Text(
-                          //   "${controller.userImage.value}",
-                          //   style: AppTextStyles.grey14.copyWith(fontWeight: FontWeight.w400, color: TColors.colorprimaryLight),
-                          // ),
-                          // SizedBox(width: 4),
-                          // SvgPicture.asset(
-                          //   TImages.iconarrowdown,
-                          // ),
+                          const Spacer(),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Container(
+                      const SizedBox(height: 20),
+                      SizedBox(
                         height: 200,
                         child: Obx(() {
                           if (controller.isCartEmpty.value) {
-                            return Center(
+                            return const Center(
                               child: Text('No items in the cart.', style: TextStyle(fontSize: 16)),
                             );
                           } else {
                              return ListView.separated(
                               itemCount: controller.productsClaim.length,
-                              separatorBuilder: (context, index) => SizedBox(height: 8),
+                              separatorBuilder: (context, index) => const SizedBox(height: 8),
                               itemBuilder: (context, index) {
                                 final product = controller.productsClaim[index];
                                 String fullImageUrl = ApiService.imageUrl;
@@ -136,7 +130,7 @@ class MyCartView extends StatelessWidget {
                                 return Slidable(
                                   key: ValueKey(index),
                                   startActionPane: ActionPane(
-                                    motion: DrawerMotion(),
+                                    motion: const DrawerMotion(),
                                     children: [
                                       SlidableAction(
                                         onPressed: (context) {
@@ -159,7 +153,7 @@ class MyCartView extends StatelessWidget {
                                         },
                                         backgroundColor: Colors.transparent,
                                         foregroundColor: Colors.red,
-                                        image: AssetImage(TImages.imgDeleteCart),
+                                        image: const AssetImage(TImages.imgDeleteCart),
                                         autoClose: true,
                                         label: '',
                                       ),
@@ -184,10 +178,10 @@ class MyCartView extends StatelessWidget {
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(15),
                                               child: CachedNetworkImage(
-                                                imageUrl: product.imageUrl!,
-                                                placeholder: (context, url) => Center(
+                                                imageUrl: product.imageUrl,
+                                                placeholder: (context, url) => const Center(
                                                   child: Padding(
-                                                    padding: const EdgeInsets.all(20.0),
+                                                    padding: EdgeInsets.all(20.0),
                                                     child: CircularProgressIndicator(),
                                                   ),
                                                 ),
@@ -200,14 +194,14 @@ class MyCartView extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 8),
+                                        const SizedBox(width: 8),
                                         Expanded(
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                product.title!,
+                                                product.title,
                                                 style: AppTextStyles.black20.copyWith(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 18,
@@ -217,7 +211,7 @@ class MyCartView extends StatelessWidget {
                                                 maxLines: 1,
                                               ),
                                               Text(
-                                                product.subtitle!,
+                                                product.subtitle,
                                                 style: AppTextStyles.grey12.copyWith(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 11,
@@ -236,7 +230,7 @@ class MyCartView extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(width: 8),
+                                        const SizedBox(width: 8),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -244,6 +238,7 @@ class MyCartView extends StatelessWidget {
                                             InkWell(
                                               onTap: () {
                                                 controller.decrementCount(index);
+                                                controller.updateCartApi(product.id.toString(), product.count);
                                                 if (!controller.isCartEmpty.value){
                                                   controller.couponCode(
                                                     controller.couponCodeController.value.text,
@@ -252,15 +247,16 @@ class MyCartView extends StatelessWidget {
                                                 },
                                               child: SvgPicture.asset(TImages.iconminus),
                                             ),
-                                            SizedBox(width: 8),
+                                            const SizedBox(width: 8),
                                             Text(
                                               '${product.count}',
-                                              style: TextStyle(fontSize: 16),
+                                              style: const TextStyle(fontSize: 16),
                                             ),
-                                            SizedBox(width: 8),
+                                            const SizedBox(width: 8),
                                             InkWell(
                                               onTap: () {
                                                 controller.incrementCount(index);
+                                                controller.updateCartApi(product.id.toString(), product.count);
                                                 if (!controller.isCartEmpty.value){
                                                   controller.couponCode(
                                                     controller.couponCodeController.value.text,
@@ -280,7 +276,7 @@ class MyCartView extends StatelessWidget {
                           }
                         }),
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Text(
                         "Have a coupon code? Enter here👇🏻",
                         style: AppTextStyles.grey12.copyWith(
@@ -288,7 +284,7 @@ class MyCartView extends StatelessWidget {
                           fontSize: 13,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                      TextInputField(
                         height: 50,
                         controller: controller.couponCodeController.value,
@@ -297,7 +293,7 @@ class MyCartView extends StatelessWidget {
                         borderColor: Colors.transparent,
                         onTap: () {},
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       CommonAppButton(
                         width: double.infinity,
                         color: TColors.colorprimaryLight,
@@ -309,14 +305,12 @@ class MyCartView extends StatelessWidget {
                             );
                           }
                           else {
-                            Get.snackbar("Can't Checkout",
-                                "Please add Product in your cart",
-                                duration: Duration(seconds: 1));
+                            Get.snackbar("Can't Checkout", "Please add Product in your cart", duration: const Duration(seconds: 1));
                           }
                           },
                         buttonText: "Apply Coupon",
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       GestureDetector( onTap: (){
                         controller.launchInBrowser(Uri.parse('https://spa2.de/lieferbedingungen'));
                       },
@@ -325,7 +319,7 @@ class MyCartView extends StatelessWidget {
                           style: AppTextStyles.black14.copyWith(fontWeight: FontWeight.w600, color: colorsecondary),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Obx(
                             () => Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,7 +348,7 @@ class MyCartView extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       CommonAppButton(
                         width: double.infinity,
                         color: TColors.colorprimaryLight,
@@ -366,7 +360,7 @@ class MyCartView extends StatelessWidget {
                           else {
                             Get.snackbar("Can't Checkout",
                                 "Please add Product in your cart",
-                                duration: Duration(seconds: 1));
+                                duration: const Duration(seconds: 1));
                           }
 
 
@@ -388,12 +382,7 @@ class MyCartView extends StatelessWidget {
     );
 
   }
-Widget _buildSummaryItem({
-  required String title,
-  required String value,
-  bool isTotal = false,
-  required Color color,
-}) {
+Widget _buildSummaryItem({required String title, required String value, bool isTotal = false, required Color color,}) {
   final MyCartController controller = Get.find<MyCartController>(tag: 'cart');
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4.0),

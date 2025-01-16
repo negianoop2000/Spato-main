@@ -63,7 +63,11 @@ class SignUpInfoView extends StatelessWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 4,bottom: 8),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 8, // Adjust padding based on keyboard visibility
+          ),
           child: CommonAppButton(
             width: double.infinity,
             color: background,
@@ -336,6 +340,19 @@ class SignUpInfoView extends StatelessWidget {
                         focusedBorder: InputBorder.none,
                         controller: controller.userPincodeController,
                         hintText: "Enter ZIP Code",
+                        onTap: () {controller.isDropdownOpen.value = false;},
+                      ),
+
+                      SizedBox(height: 20),
+
+                      TextInputField(
+                        height: 50,
+                        borderColor: borderColor,
+                        backgroundColor: background,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        controller: controller.userReferralController,
+                        hintText: "Enter Referral Number If have",
                         onTap: () {controller.isDropdownOpen.value = false;},
                       ),
                       SizedBox(height: 20),

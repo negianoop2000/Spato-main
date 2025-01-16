@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
-import 'package:spato_mobile_app/common/bottomNavigationTap.dart';
 import 'package:spato_mobile_app/utils/constants/app_text_styles.dart';
 import 'package:spato_mobile_app/utils/constants/colors.dart';
 import 'package:spato_mobile_app/utils/constants/common_app_buttons.dart';
@@ -27,14 +26,14 @@ class LoginView extends StatelessWidget {
     Color borderColor = Theme.of(context).brightness == Brightness.light
         ? TColors.colorlightgrey
         : TColors.darkerGrey;
-    Color createAnAcount = Theme.of(context).brightness == Brightness.light
-        ? TColors.colorlightgrey
-        : TColors.colorsecondaryDark;
+    // Color createAnAcount = Theme.of(context).brightness == Brightness.light
+    //     ? TColors.colorlightgrey
+    //     : TColors.colorsecondaryDark;
     Color bottomAcountText = Theme.of(context).brightness == Brightness.light
         ? TColors.colorlightgrey
         : TColors.colorprimaryLight;
 
-    var height = MediaQuery.of(context).size.height;
+   // var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SafeArea(
@@ -59,7 +58,7 @@ class LoginView extends StatelessWidget {
                         TTexts.txtSignMsg,
                         style: AppTextStyles.textTitleLight.copyWith(color: TColors.colorlightgrey, fontSize: 13),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       TextInputField(
                         height: 50,
                         controller: controller.emailController,
@@ -79,7 +78,7 @@ class LoginView extends StatelessWidget {
                         hintText: TTexts.txtEntermail,
                         onTap: () {},
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       TextInputField(
                         height: 50,
                         borderColor: borderColor,
@@ -110,7 +109,30 @@ class LoginView extends StatelessWidget {
                         hintText: TTexts.txtEnterpassword,
                         onTap: () {},
                       ),
-                      SizedBox(height: 20), // Add some spacing
+                       const SizedBox(height: 20),
+                      if(controller.otpfieldvisible==true)
+                      TextInputField(
+                        height: 50,
+                        controller: controller.otpController,
+                        borderColor: borderColor,
+                        backgroundColor: background,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                      // focusNode: controller.emailFocusNode,
+                        prefixIcon: SvgPicture.asset(
+                          TImages.imgIconEmail, // Replace with your SVG path
+                          color: controller.otpController.text.isEmpty
+                              ? TColors.colordarkgrey
+                              : TColors.colorlightgrey,
+                          height: 16,
+                          width: 16,
+                        ),
+                        hintText: "Enter Otp",
+                        onTap: () {},
+                      ),
+                const       SizedBox(height: 20),
+
+                      // Add some spacing
                       Row(
                         children: [
                           GestureDetector(
@@ -131,7 +153,7 @@ class LoginView extends StatelessWidget {
                                     : Colors.transparent,
                               ),
                               child: controller.rememberMe.value
-                                  ? Icon(
+                                  ? const Icon(
                                 Icons.check,
                                 size: 16,
                                 color: Colors.white,
@@ -139,12 +161,12 @@ class LoginView extends StatelessWidget {
                                   : null,
                             ),
                           ),
-                          SizedBox(width: 8),
+                    const       SizedBox(width: 8),
                           Text(
                             TTexts.txtRemberme,
                             style: AppTextStyles.textTitleLight.copyWith(color: TColors.colorprimaryLight),
                           ),
-                          Spacer(),
+                    const       Spacer(),
                           GestureDetector(
                             onTap: () {
                              Get.toNamed(Routes.FORGET_PASSWORD);
@@ -163,17 +185,30 @@ class LoginView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      CommonAppButton(
-                        color: TColors.colorprimaryLight,
-                        width: double.infinity,
-                        onPressed: () {
-                        controller.validation(context);
-                        //   Get.offAll(() => BottomNavigationTap());
-                        },
-                        buttonText: TTexts.txtSignin,
-                      ),
-                      SizedBox(height: 20),
+                const       SizedBox(height: 20),
+                      if(controller.otpfieldvisible==true)
+                        CommonAppButton(
+                          color: TColors.colorprimaryLight,
+                          width: double.infinity,
+                          onPressed: () {
+                            controller.verifyotp(controller.emailController.text,controller.otpController.text );
+                          },
+                          buttonText: "Submit Otp",
+                        ),
+
+                      if(controller.otpfieldvisible==true)
+                        const SizedBox(height: 20),
+
+                        CommonAppButton(
+                          color: TColors.colorprimaryLight,
+                          width: double.infinity,
+                          onPressed: () {
+                          controller.validation(context);
+                          //   Get.offAll(() => BottomNavigationTap());
+                          },
+                          buttonText: TTexts.txtSignin,
+                        ),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
                            FocusScope.of(context).unfocus();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:spato_mobile_app/app/modules/myOrder_screen/controllers/my_order_screen_controller.dart';
+import 'package:spato_mobile_app/utils/constants/api_service.dart';
 import 'package:spato_mobile_app/utils/constants/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/common_app_buttons.dart';
@@ -29,7 +30,17 @@ class DetailOrder_b2c_View extends StatelessWidget {
         ? TColors.colorlightgrey
         : TColors.darkerGrey;
 
-    List<dynamic>? assignmentDetails = orderDetails['ordersDtl'];
+    List<dynamic> assignmentDetails = orderDetails['ordersDtl'];
+
+    double totalPrice = assignmentDetails.fold<double>(
+      0.0,
+          (sum, item) {
+        double quantity = double.tryParse(item['product_quanty']?.toString() ?? '0') ?? 0.0;
+        double unitPrice = double.tryParse(item['product_price']?.toString() ?? '0.0') ?? 0.0;
+        return sum + (quantity * unitPrice);
+      },
+    );
+
 
     return Scaffold(
       appBar: AppBar(
@@ -49,14 +60,12 @@ class DetailOrder_b2c_View extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Icon(
-                    Icons.arrow_back_ios, color: colorsecondary, size: 15),
+                child: Icon(Icons.arrow_back_ios, color: colorsecondary, size: 15),
               ),
             ),
           ),
         ),
-        title: Text(
-            'Associated products', style: TextStyle(color: colorsecondary)),
+        title: Text('Associated products', style: TextStyle(color: colorsecondary)),
         centerTitle: true,
         backgroundColor: theme.scaffoldBackgroundColor,
         iconTheme: IconThemeData(color: colorsecondary),
@@ -66,15 +75,28 @@ class DetailOrder_b2c_View extends StatelessWidget {
         child: ListView(
           children: [
             // Common Order Details
-            if (assignmentDetails != null)
-              ...assignmentDetails.map((item) =>
-                  buildProductDetail(item, context)).toList(),
+            ...assignmentDetails.map((item) => buildProductDetail(item, context)),
 
+            // Total Price Display
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                'Total Price: €${totalPrice.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: colorsecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+            // Download PDF Button
             CommonAppButton(
               width: double.infinity,
               color: TColors.colorprimaryLight,
               onPressed: () async {
-                String pdfUrl = "https://spa2.de/OffersPdfdownload/$ordernumber";
+                String pdfUrl = "${ApiService.baseUrl}OffersPdfdownload/$ordernumber";
                 final Uri url = Uri.parse(pdfUrl);
                 if (await canLaunchUrl(url)) {
                   await launchUrl(url);
@@ -83,7 +105,7 @@ class DetailOrder_b2c_View extends StatelessWidget {
                 }
               },
               buttonText: "Download Pdf",
-            )
+            ),
           ],
         ),
       ),
@@ -92,6 +114,7 @@ class DetailOrder_b2c_View extends StatelessWidget {
 
 
   Widget buildProductDetail(Map<String, dynamic> product, context) {
+
     final theme = Theme.of(context);
     Color background = theme.brightness == Brightness.light
         ? TColors.containerFill
@@ -103,6 +126,10 @@ class DetailOrder_b2c_View extends StatelessWidget {
     final colorsecondary = theme.brightness == Brightness.light
         ? TColors.colorsecondaryLight
         : TColors.colorsecondaryDark;
+
+    double quantity = double.tryParse(product['product_quanty']?.toString() ?? '0') ?? 0.0;
+    double unitPrice = double.tryParse(product['product_price']?.toString() ?? '0.0') ?? 0.0;
+    double totalPrice = quantity * unitPrice;
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
@@ -116,18 +143,18 @@ class DetailOrder_b2c_View extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FutureBuilder<String>(
-              future: controller.get_image(product['Bild_1']),
+            FutureBuilder<String?>(
+              future: product['Bild_1'] != null
+                  ? controller.get_image(product['Bild_1'])
+                  : Future.value(null),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Container(
                     height: 80,
                     width: 80,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: Center(child: CircularProgressIndicator()),
                   );
-                } else if (snapshot.hasError || !snapshot.hasData) {
+                } else if (snapshot.hasError || snapshot.data == null) {
                   return Container(
                     height: 80,
                     width: 80,
@@ -171,11 +198,14 @@ class DetailOrder_b2c_View extends StatelessWidget {
                 1: FlexColumnWidth(3),
               },
               children: [
-                buildTableRow('Product', product['Artikelname'], colorsecondary),
-                buildTableRow('Manufacturer', product['Hersteller'], colorsecondary),
-                buildTableRow('Quantity', product['product_quanty'], colorsecondary),
-                buildTableRow('Unit Price', product['product_price'], colorsecondary),
-                buildTableRow('Total Price', product['order_total'], colorsecondary),
+                buildTableRow('Product', product['Artikelname'] ?? 'N/A', colorsecondary),
+                buildTableRow('Manufacturer', product['Hersteller'] ?? 'N/A', colorsecondary),
+                buildTableRow('Quantity', product['product_quanty']?.toString() ?? '0', colorsecondary),
+                buildTableRow('Unit Price',"€${product['product_price']!}" ?? '0.0', colorsecondary),
+               // buildTableRow('Total Price', product['order_total']?.toString() ?? '0.0', colorsecondary),
+                buildTableRow('Total Price', '€${totalPrice.toStringAsFixed(2)}', colorsecondary),
+
+
               ],
             ),
           ],
@@ -200,7 +230,7 @@ class DetailOrder_b2c_View extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
-            value?.toString() ?? '',
+            value?.toString() ?? 'N/A', // Provide a default value for null
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,

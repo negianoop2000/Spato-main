@@ -4,29 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
+import 'package:spato_mobile_app/firebase_services/notification_service.dart';
 
+String? globalShopId;
 class ApiService {
+
   static late final BuildContext context;
   static const String webUrl = "https://spa2.de";
-  static const String baseUrl = "https://spa2.de/";
-  static const String pdfUrl = "https://spa2.de/storage/";
-  static const String imageUrl = "https://spa2.de/storage/";
+
+    //static const String baseUrl = "http://192.168.1.17:8000/";
+
+ static const String baseUrl = "https://9kt.7cd.mytemp.website/";
+
+
+ static const String basesUrl = "https://spa2.de/";
+ static const String pdfUrl = "https://spa2.de/storage/";
+  static const String imageUrl = "${baseUrl}storage/";
   static const String register = "register";
   static const String login = "login";
+  static const String loginForMobileUrl = "loginForMobile";
+
   static const String forgetPassword = "forgetPassword";
   static const String passwordReset = "password/reset";
   static const String getAllLatestProductsApi = "getAllLatestProductsApi";
   static const String home1 = "home1";
   static const String subscribeNewsLetterApi = "subscribeNewsLetterApi";
   static const String cartAddApi = "cart/addApi";
+  static const String updatecartApi = "cart/updateQuanityApi";
+
+
   static const String cartGetCartItemsApi = "cart/getCartItemsApi";
   static const String cartUpdateQuantityApi = "cart/updateQuanityApi";
   static const String deleteCartProductsApi = "deleteCartProductsApi/";
-  static const String cartCheckoutItemsApiAuthentic = "cart/checkoutItemsApiAuthentic";
   static const String profileViewApi = "profileViewApi";
   static const String showOrderHistoryApi = "showOrderHistoryApi";
   static const String productsByCategoriesApi = "ProductsByCategoriesApi/";
-  static const String productdetailPageApi = "ProductdetailPageApi/";
+  static const String productDetailPageApi = "ProductdetailPageApi/";
   static const String userLogoutUrl = "logoutApi";
   static const String userDeleteUrl = "delete-account";
   static const String submitQuotesUrl ="submitQuotes";
@@ -34,7 +47,7 @@ class ApiService {
   static const String offerListingApi ="offerListingApi";
   static const String updateQuantityApi ="updateQuanityApi";
   static const String editProfileApi ="addPermanentProfileApi";
-  static const String checkoutApi ="cart/checkoutItemsApiAuthentic";
+  static const String checkoutApi ="cart/getCartItemsforCheckout";
   static const String applyDisccodeApi ="applyDiscCode";
   static const String deleteCartItemApi ="cart/deleteCartProductsApi/";
   static const String addRevewRattingApi ="addReview_RattingApi/";
@@ -91,19 +104,64 @@ class ApiService {
   static const String showSparePartHistoryApi  = "showSparePartHistoryApi";
   static const String getSparePartDetailsApiUrl ="getSparePartDetailsApi";
 
+  static const String getB2bShopDetails ="b2b_shop_details/";
+  static const String getB2bShopList = "get_b2b_shop_list";
+  static const String changeSubscribeStatus = "change_status_subscribe_feature";
 
 
+  Future loginApi(String email, String password, {String? shopId}) async {
+    String deviceToken = await NotificationService().getDeviceToken();
+    Map<String, String> body = {
+      'email': email,
+      'password': password,
+      'device_type': Platform.isAndroid ? "android" : "ios",
+      'device_token':deviceToken,
+    };
 
-  Future loginApi(email, password) async {
+    if (shopId != "null" && shopId!.isNotEmpty) {
+      body['shop_id'] = shopId;
+    }
+
+    // Make the POST request
     final response = await http.post(
       Uri.parse(baseUrl + login),
+      body: body,
+    );
+
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future verifyOtp(String email, String otp) async {
+    final response = await http.post(
+        Uri.parse('${"${baseUrl}verify_otp"}?email_login=$email&otp=$otp'),
+    );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future fetchuserid(shopid) async {
+    final response = await http.post(
+      Uri.parse("${baseUrl}user_id_by_shop_id"),
       body: ({
-        'email': email,
-        'password': password,
+        'shop_id': shopid,
       }),
     );
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
+  }
+
+  Future loginformobile(String email, String password) async {
+    final response = await http.post(
+        Uri.parse(baseUrl + loginForMobileUrl).replace(queryParameters: {
+          'email': email,
+          'password': password,
+        })
+    );
+
+
+    var convertDataToJson = jsonDecode(response.body);
+      return convertDataToJson;
   }
 
   Future signup(
@@ -122,7 +180,7 @@ class ApiService {
       bool termCondition,
       bool confirmPrivacy,
       String company,
-      String vatId,
+      String vatId, String referral_id,
       ) async {
     final Map<String, String> body = {
       "email": email,
@@ -141,6 +199,7 @@ class ApiService {
       "Bestätige_Datenschutz": confirmPrivacy.toString(),
       "company_name": company,
       "vat_id": vatId,
+      "shop_id":referral_id,
     };
 
     final response = await http.post(
@@ -151,9 +210,8 @@ class ApiService {
     return convertDataToJson;
   }
 
-
   Future forgetPassApi(email) async {
-   // if (!(await _checkConnectivity())) return null;
+    // if (!(await _checkConnectivity())) return null;
     final response = await http.post(
       Uri.parse(baseUrl + forgetPassword),
       body: ({
@@ -176,9 +234,9 @@ class ApiService {
     return convertDataToJson;
   }
 
-  Future<Map<String, dynamic>> productCategories(String category) async {
+  Future<Map<String, dynamic>> productCategories(String category,String userid) async {
     final response = await http.get(
-      Uri.parse("$baseUrl$productsByCategoriesApi$category"),
+      Uri.parse("$baseUrl$productsByCategoriesApi$category""/$userid"),
       headers: {
 
       },
@@ -195,7 +253,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${profileViewApi}"),
+      Uri.parse("$baseUrl$profileViewApi"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -203,11 +261,12 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-  Future getAllLatestProductsHomeApi() async {
+
+  Future getAllLatestProductsHomeApi(userid) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${getAllLatestProductsApi}"),
+      Uri.parse("$baseUrl$getAllLatestProductsApi""/$userid"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -215,11 +274,13 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
+
   Future getSupplierListHomeApi() async {
     final prefs = await SharedPreferences.getInstance();
+  //  String baseUrl = getBaseUrl();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${getSupplierListApiUrl}"),
+      Uri.parse("$baseUrl$getSupplierListApiUrl"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -232,7 +293,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${home1}"),
+      Uri.parse("$baseUrl$home1"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -244,12 +305,21 @@ class ApiService {
   Future orderHistory() async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
+    String? shopId = globalShopId; // Assuming globalShopId might be nullable
+
+    // Build the URL with shopId if it's not null or empty
+    String url = "$baseUrl$showOrderHistoryApi";
+    if (shopId != null && shopId.isNotEmpty) {
+      url += "/$shopId"; // Add shopId to the URL if available
+    }
+
     final response = await http.get(
-      Uri.parse("${baseUrl}${showOrderHistoryApi}"),
+      Uri.parse(url),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
@@ -258,7 +328,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${showSparePartHistoryApi}"),
+      Uri.parse("$baseUrl$showSparePartHistoryApi"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -270,45 +340,63 @@ class ApiService {
   Future<Map<String, dynamic>> getCartItemsApi() async {
     final prefs = await SharedPreferences.getInstance();
     var guestToken = prefs.getString('guest_token');
+    String? shopId = globalShopId;
+    String url = "$baseUrl$cartGetCartItemsApi";
+    if (shopId != null && shopId.isNotEmpty) {
+      url += "/$shopId";
+    }
+
     final response = await http.get(
-      Uri.parse("${baseUrl}${cartGetCartItemsApi}"),
+      Uri.parse(url),
       headers: {
         "guest-token": guestToken ?? '',
         "Content-Type": "application/json",
       },
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
 
   Future<Map<String, dynamic>> addToCardApi(String productId, int quantity) async {
     final prefs = await SharedPreferences.getInstance();
+    String? shopId = globalShopId;
+
     var guestToken = prefs.getString('guest_token');
+
+    String url = baseUrl + cartAddApi;
+    if (shopId != null && shopId.isNotEmpty) {
+      url += "/$shopId";
+    }
+
     final response = await http.post(
-      Uri.parse(baseUrl + cartAddApi),
+      Uri.parse(url),
       headers: {
         "guest-token": guestToken ?? '',
         "Content-Type": "application/json",
       },
       body: jsonEncode({
         "product_id": productId,
-        "quantity": quantity.toString()
+        "quantity": quantity.toString(),
       }),
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
 
-
   Future userLogoutApi() async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
+    String url = "$baseUrl$userLogoutUrl";
+
     final response = await http.post(
-      Uri.parse('$baseUrl$userLogoutUrl'),
+      Uri.parse(url),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
@@ -326,28 +414,46 @@ class ApiService {
     return convertDataToJson;
   }
 
-  Future productDetail(int id , String Manufacturer) async {
+  Future productDetail(int id, String manufacturer) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
+    String? shopId = globalShopId;
+
+    String url = "$baseUrl$productDetailPageApi$id/$manufacturer";
+    if (shopId != null && shopId.isNotEmpty) {
+      url += "/$shopId";
+    }
+
     final response = await http.get(
-      Uri.parse("${baseUrl}${productdetailPageApi}$id/$Manufacturer"),//3843/Technik
+      Uri.parse(url),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
 
-
-  Future submitQuotesApi(String productId, String firmName, String contactName, String new_email, String mobile, String sparePartName, String quoteNeededBy, String budget, String overview, File file) async {
+  Future submitQuotesApi(String productId,String productcode, String companymobile,String companyemail,
+      String firmName, String contactName, String new_email, String mobile, String sparePartName, String quoteNeededBy, String budget, String overview, File file) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
-  //  if (!(await _checkConnectivity())) return null;
+
+    String shopid = globalShopId ?? "";
+
     var request = http.MultipartRequest('POST', Uri.parse(baseUrl + submitQuotesUrl));
     request.headers['Authorization'] = 'Bearer $authToken';
 
+    request.fields['shop_id'] = shopid;
+
     request.fields['product_id'] = productId;
+    request.fields['product_code'] = productcode;
+
+    request.fields['firmEmail'] = companyemail;
+    request.fields['firmMobile'] = companymobile;
+
+
     request.fields['firmName'] = firmName;
     request.fields['contactName'] = contactName;
     request.fields['new_email'] = new_email;
@@ -357,26 +463,12 @@ class ApiService {
     request.fields['budget'] = budget;
     request.fields['Overview'] = overview;
 
-    if (file != null) {
+
       request.files.add(await http.MultipartFile.fromPath('Document', file.path));
-    }
 
     var response = await request.send();
     final responseBody = await response.stream.bytesToString();
     var convertDataToJson = jsonDecode(responseBody);
-    return convertDataToJson;
-  }
-
-  Future getofferListingApi() async {
-    final prefs = await SharedPreferences.getInstance();
-    var authToken = prefs.getString('auth_token');
-    final response = await http.get(
-      Uri.parse("${baseUrl}${offerListingApi}"),
-      headers: {
-        'Authorization': 'Bearer $authToken',
-      },
-    );
-    var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
 
@@ -397,6 +489,7 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
+
   Future saveTempAddressApi(String tempAddress, String tempCity, String tempZip, String tempCountry,) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
@@ -415,7 +508,6 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-
 
   Future editProfile(String city, String zipCode, String country, String userEmail,String vatNumber, String repeatUserName, String permanentAddress, String mobile, File? imageFile) async {
     final prefs = await SharedPreferences.getInstance();
@@ -471,15 +563,10 @@ class ApiService {
     return convertDataToJson;
   }
 
-  Future<Map<String, dynamic>?> applyDiscCodeApi(String applyDiscCode, double originalSummaryTotal) async {
-    final prefs = await SharedPreferences.getInstance();
-    var guestToken = prefs.getString('guest_token');
+  Future<Map<String, dynamic>?> applyDiscCodeApi(String applyDiscCode, double originalSummaryTotal,{String? shopId}) async {
     final response = await http.get(
-      Uri.parse('${baseUrl + applyDisccodeApi}?apply_disc_code=$applyDiscCode&orderSummaryTotal=$originalSummaryTotal'),
-      headers: {
-        "guest-token": guestToken ?? '',
-        "Content-Type": "application/json",
-      },
+      Uri.parse('${baseUrl + applyDisccodeApi}?apply_disc_code=$applyDiscCode&orderSummaryTotal=$originalSummaryTotal&shop_id=$shopId'),
+
     );
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -492,7 +579,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var guestToken = prefs.getString('guest_token');
     final response = await http.delete(
-      Uri.parse("${baseUrl}${deleteCartItemApi}$productId"),
+      Uri.parse("$baseUrl$deleteCartItemApi$productId"),
       headers: {
         "guest-token": guestToken ?? '',
         "Content-Type": "application/json",
@@ -505,31 +592,42 @@ class ApiService {
   Future reveiwRatingApi(String rating, String comment,String productId) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
+
+    String shopid = globalShopId ?? "";
+
     final response = await http.post(
-      Uri.parse("${baseUrl}${addRevewRattingApi}$productId"),
+      Uri.parse("$baseUrl$addRevewRattingApi$productId"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
       body: ({
         "rating": rating,
         "reviewComment": comment,
+        "shop_id":shopid,
       }),
     );
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
 
-
   Future searchApi(String searchText) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
-    String Url = "$baseUrl${menuSearchApi}?text=$searchText";
+    String? shopId = globalShopId;
+
+    final uri = Uri.parse("$baseUrl$menuSearchApi").replace(queryParameters: {
+      "text": searchText,
+      if (shopId != null && shopId.isNotEmpty) "shop_id": shopId,
+    });
+
+
     final response = await http.get(
-      Uri.parse(Url),
+      uri,
       headers: {
         'Authorization': 'Bearer $authToken',
       },
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
@@ -538,13 +636,13 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.post(
-      Uri.parse("${baseUrl}${saveTempAddressUrl}"),
+      Uri.parse("$baseUrl$saveTempAddressUrl"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
       body: ({
         "Name_der_Firma" : name,
-          "Firmen_E_Mail" : email,
+        "Firmen_E_Mail" : email,
         "Firmentelefon" : phone,
         "tempAddress" : tempAddress,
         "tempCity" : tempCity,
@@ -555,8 +653,6 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-
-
 
   Future<dynamic> OrderApi(
       String delvAddress,
@@ -572,6 +668,8 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     var guestToken = prefs.getString('guest_token');
+    String? shopId = globalShopId;
+
     var bodyContent = {
       "user": {"id": UserId},
       "product_id": productIds,
@@ -585,8 +683,14 @@ class ApiService {
       "order_total": subTotal + shippingAmt + taxAmt
     };
     String bodyJson = jsonEncode(bodyContent);
+
+    String url = "$baseUrl$addOrderApi";
+    if (shopId != null && shopId.isNotEmpty) {
+      url += "/$shopId";
+    }
+
     final response = await http.post(
-      Uri.parse("${baseUrl}${addOrderApi}"),
+      Uri.parse(url),
       headers: {
         'Authorization': 'Bearer $authToken',
         "guest-token": guestToken ?? '',
@@ -594,12 +698,11 @@ class ApiService {
       },
       body: bodyJson,
     );
+
+    // Parse the response and return
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-
-
-
 
   Future getAllAddressList() async {
     final prefs = await SharedPreferences.getInstance();
@@ -628,7 +731,6 @@ class ApiService {
     return convertDataToJson;
   }
 
-
   Future b2b_offerListingApi() async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
@@ -644,17 +746,17 @@ class ApiService {
   }
 
   Future b2b_updateOfferStatusApi(String offer_code, String status) async {
-  final prefs = await SharedPreferences.getInstance();
-  var authToken = prefs.getString('auth_token');
-  final response = await http.get(
-    Uri.parse('${baseUrl + b2b_updateOfferStatusB2BApi}?offer_code=$offer_code&status=$status'),
-    headers: {
-      'Authorization': 'Bearer $authToken',
-    },
-  );
-  var convertDataToJson = jsonDecode(response.body);
-  return convertDataToJson;
-}
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+    final response = await http.get(
+      Uri.parse('${baseUrl + b2b_updateOfferStatusB2BApi}?offer_code=$offer_code&status=$status'),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+      },
+    );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
 
   Future b2b_assignmentListing() async {
     final prefs = await SharedPreferences.getInstance();
@@ -724,6 +826,7 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
+
   Future b2b_updateBillStatus() async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
@@ -780,8 +883,6 @@ class ApiService {
     return convertDataToJson;
   }
 
-
-
   Future<Map<String, dynamic>?> getOfferDetails(String offer_id) async  {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
@@ -807,6 +908,7 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
+
   Future B2cgetOrdersDetails(String order_id,) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
@@ -824,15 +926,15 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.post(
-      Uri.parse("${baseUrl}${b2b_saveContactAddressApi}"),
+      Uri.parse("$baseUrl$b2b_saveContactAddressApi"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
       body: ({
-       "Name_der_Firma" : name,
-       "Firmen_E_Mail" : email,
+        "Name_der_Firma" : name,
+        "Firmen_E_Mail" : email,
         "Firmentelefon" : phone,
-       "userID" : userID,
+        "userID" : userID,
         "Straße" : tempAddress,
         "Ort" : tempCity,
         "PLZ" : tempZip,
@@ -857,10 +959,11 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-  Future b2b_deleteTempAddress(int Address_id) async {
+
+  Future b2b_deleteTempAddress(int addressId) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
-    String Url = "$baseUrl$b2b_contactAddressDeleteApi$Address_id";
+    String Url = "$baseUrl$b2b_contactAddressDeleteApi$addressId";
     final response = await http.get(
       Uri.parse(Url),
       headers: {
@@ -871,11 +974,11 @@ class ApiService {
     return convertDataToJson;
   }
 
-  Future b2b_getAssignmentDetails(String assignment_no,) async {
+  Future b2b_getAssignmentDetails(String assignmentNo,) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse('${baseUrl + b2b_getAssignmentDetailsApi}?assignment_no=$assignment_no'),
+      Uri.parse('${baseUrl + b2b_getAssignmentDetailsApi}?assignment_no=$assignmentNo'),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -884,14 +987,29 @@ class ApiService {
     return convertDataToJson;
   }
 
+  Future adminnotificationsApi() async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+    final response = await http.get(
+      Uri.parse("$baseUrl$admin_notificationsApi"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+
+        "Content-Type": "application/json",
+      },
+    );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
 
   Future notificationsApi() async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse('${"http://192.168.1.13:8000/" + notifications}'),
+      Uri.parse(baseUrl + notifications),
       headers: {
-        'Authorization': 'Bearer 139|nfaR6RVohfurM1GIwELLh6Og93jg2fS1Zr8Dpxysc3b57167',        "Content-Type": "application/json",
+        'Authorization': 'Bearer $authToken',
+        "Content-Type": "application/json",
       },
     );
     var convertDataToJson = jsonDecode(response.body);
@@ -902,9 +1020,9 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.post(
-      Uri.parse('${"http://192.168.1.13:8000/$readnotification"}?notification_id=$id'),
+      Uri.parse('${"$baseUrl$readnotification"}?notification_id=$id'),
       headers: {
-        'Authorization': 'Bearer 139|nfaR6RVohfurM1GIwELLh6Og93jg2fS1Zr8Dpxysc3b57167',
+        'Authorization': 'Bearer $authToken',
         "Content-Type": "application/json",
       },
     );
@@ -916,17 +1034,15 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.post(
-      Uri.parse('${"http://192.168.1.13:8000/$deletenotification"}?notification_id=$id'),
+      Uri.parse('${"$baseUrl$deletenotification"}?notification_id=$id'),
       headers: {
-        'Authorization': 'Bearer 139|nfaR6RVohfurM1GIwELLh6Og93jg2fS1Zr8Dpxysc3b57167',
+        'Authorization': 'Bearer $authToken',
         "Content-Type": "application/json",
       },
     );
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-
-
 
   Future get_Image(String image_Bild,) async {
     final prefs = await SharedPreferences.getInstance();
@@ -945,7 +1061,7 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${getProductsAllCategoryUrl}"),
+      Uri.parse("$baseUrl$getProductsAllCategoryUrl"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -954,24 +1070,11 @@ class ApiService {
     return convertDataToJson;
   }
 
-  Future BannnerContent() async {
+  Future getMainCategory({required String userid}) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${getBannnerContentUrl}"),
-      headers: {
-        'Authorization': 'Bearer $authToken',
-      },
-    );
-    var convertDataToJson = jsonDecode(response.body);
-    return convertDataToJson;
-  }
-
-  Future getMainCategory() async {
-    final prefs = await SharedPreferences.getInstance();
-    var authToken = prefs.getString('auth_token');
-    final response = await http.get(
-      Uri.parse("${baseUrl}${getMainCategory1ApiUrl}"),
+      Uri.parse("$baseUrl$getMainCategory1ApiUrl""/$userid"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -984,43 +1087,62 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
 
+    String shopId = globalShopId ??"";
     String selectedSuppliersQuery = selectedSupplierIndexes
         .map((index) => 'selectedSuppliers[]=${Uri.encodeQueryComponent(index.toString())}')
         .join('&');
+
     final response = await http.get(
-      Uri.parse('$baseUrl$getDynamicNavbarUrl?Kategorie_1=${Uri.encodeQueryComponent(mainCategory)}&$selectedSuppliersQuery'),
+      Uri.parse('$baseUrl$getDynamicNavbarUrl?Kategorie_1=${Uri.encodeQueryComponent(mainCategory)}&$selectedSuppliersQuery&shop_id=${Uri.encodeQueryComponent(shopId)}'),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
     );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
 
-  Future getFilterProducts(String mainCategory, List<int> selectedSupplierIndexes) async {
+  Future<dynamic> getFilterProducts(String mainCategory, List<int> selectedSupplierIndexes) async {
     final prefs = await SharedPreferences.getInstance();
-    var authToken = prefs.getString('auth_token');
+    final authToken = prefs.getString('auth_token');
+    final String shopId = globalShopId ?? '';
 
-    String selectedSuppliersQuery = selectedSupplierIndexes
+    final String selectedSuppliersQuery = selectedSupplierIndexes
         .map((index) => 'selectedSuppliers[]=${Uri.encodeQueryComponent(index.toString())}')
         .join('&');
-    final response = await http.get(
-      Uri.parse('$baseUrl$getFilterProductsApiUrl?selectedKategories=${Uri.encodeQueryComponent(mainCategory)}&$selectedSuppliersQuery'),
-      headers: {
-        'Authorization': 'Bearer $authToken',
-      },
+
+    final Uri url = Uri.parse(
+      '$baseUrl$getFilterProductsApiUrl?'
+          'selectedKategories=${Uri.encodeQueryComponent(mainCategory)}&'
+          '$selectedSuppliersQuery&'
+          // 'sortOption=${Uri.encodeQueryComponent("sortOption")}&'
+          'shop_id=${Uri.encodeQueryComponent(shopId)}',
     );
-    var convertDataToJson = jsonDecode(response.body);
-    return convertDataToJson;
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $authToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {'error': 'Failed to load products'};
+      }
+    } catch (e) {
+      return {'error': 'Network error or invalid response'};
+    }
   }
-
-
 
   Future getSparepartImage(String productId) async {
     final prefs = await SharedPreferences.getInstance();
     var authToken = prefs.getString('auth_token');
     final response = await http.get(
-      Uri.parse("${baseUrl}${getSparepartImageUrl}$productId"),
+      Uri.parse("$baseUrl$getSparepartImageUrl$productId"),
       headers: {
         'Authorization': 'Bearer $authToken',
       },
@@ -1028,8 +1150,6 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-
-
 
   Future<Map<String, dynamic>> extractText_sparePartApi(String x, String y , String productId) async {
     final prefs = await SharedPreferences.getInstance();
@@ -1050,7 +1170,6 @@ class ApiService {
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }
-
 
   Future<Map<String, dynamic>> addSparePartOfferUrl(List<Map<String, dynamic>> inputs,String productId) async {
     final prefs = await SharedPreferences.getInstance();
@@ -1083,6 +1202,188 @@ class ApiService {
         'Authorization': 'Bearer $authToken',
       },
     );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future getb2bshop_details(String encrypted_userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+    final response = await http.get(
+      Uri.parse("$baseUrl$getB2bShopDetails$encrypted_userId"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+      },
+    );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future getb2bshop_detailsforadmin( String encryptedUserId, String userid) async{
+  final prefs = await SharedPreferences.getInstance();
+  var authToken = prefs.getString('auth_token');
+  final response = await http.get(
+  Uri.parse("$baseUrl$getB2bShopDetails$encryptedUserId?id=$userid"),
+  headers: {
+  'Authorization': 'Bearer $authToken',
+  },
+  );
+  var convertDataToJson = jsonDecode(response.body);
+  return convertDataToJson;
+}
+
+  Future getb2bshoplist() async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+    final response = await http.get(
+      Uri.parse("$baseUrl$getB2bShopList"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+      },
+    );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future changeStatusSubscribe(String userid, String feature, String newStatus, String charge) async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+
+    // Construct the payload data as a Map
+    final data = {
+      'feature': feature,
+      'feature_charge': charge,
+      'user_id': userid,
+      'status': newStatus,
+    };
+
+    final response = await http.post(
+      Uri.parse("$baseUrl$changeSubscribeStatus"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+        "Content-Type": "application/x-www-form-urlencoded", // Form data content type
+      },
+      body: data, // Send data as form-encoded payload
+    );
+
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future savefeaturecharge(String userid, String feature, String charge) async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+
+    final data = {
+      'feature': feature,
+      'user_id': userid,
+      'feature_charge': charge,
+    };
+
+    final response = await http.post(
+      Uri.parse("${baseUrl}save_feature_charge"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+        "Content-Type": "application/x-www-form-urlencoded", // Form data content type
+      },
+      body: data,
+    );
+
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future savesubscriptioncharge(String userid, String price) async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+
+    final data = {
+      'user_id': userid,
+      'commision_on_sale': price,
+    };
+
+    final response = await http.post(
+      Uri.parse("${baseUrl}update_commision_on_sale"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: data,
+    );
+
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future savepaymentalertmessage(String userid, String message) async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+
+    final data = {
+      'message':message,
+      'user_id': userid,
+    };
+
+    final response = await http.post(
+      Uri.parse("${baseUrl}save_payment_alert_message"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: data,
+    );
+
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future paymentalertstatus(String userid, String status) async {
+    final prefs = await SharedPreferences.getInstance();
+    var authToken = prefs.getString('auth_token');
+
+    final data = {
+      'user_id': userid,
+      'old_status': status,
+    };
+
+    final response = await http.post(
+      Uri.parse("${baseUrl}change_payment_alert_status"),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+        "Content-Type": "application/x-www-form-urlencoded", // Form data content type
+      },
+      body: data,
+    );
+
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future getprivacypolicies( String pageName, String userId) async{
+    final response = await http.get(
+      Uri.parse("$baseUrl""fetchStaticDataForMobile?pageName=$pageName&userID=$userId"),
+    );
+    var convertDataToJson = jsonDecode(response.body);
+    return convertDataToJson;
+  }
+
+  Future<Map<String, dynamic>> updateCartApi(String productId, int quantity) async {
+    final prefs = await SharedPreferences.getInstance();
+    var guestToken = prefs.getString('guest_token');
+    String url = baseUrl + updatecartApi;
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "guest-token": guestToken ?? '',
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "product_id": productId,
+        "quantity": quantity.toString(),
+      }),
+    );
+
     var convertDataToJson = jsonDecode(response.body);
     return convertDataToJson;
   }

@@ -157,7 +157,7 @@ class CheckoutCongratulationView extends GetView<CheckoutCongratulationControlle
             style: AppTextStyles.black14.copyWith(
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: isTotal ? TColors.colorsecondaryLight : null,
+              color: isTotal ? TColors.grey : TColors.grey,
             ),
           ),
         ],

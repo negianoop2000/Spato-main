@@ -59,7 +59,12 @@ class SeeCategoriesController extends GetxController {
     print("Selected Category: $category");
     isLoading(true);
     try {
-      var response = await ApiService().productCategories(category);
+      var responseforuserid = await ApiService().fetchuserid(globalShopId);
+
+      print(responseforuserid);
+
+      String userid = responseforuserid['b2b_id'];
+      var response = await ApiService().productCategories(category,userid);
       if (response != null) {
         var allProduct = response['allProduct'] as List<dynamic>? ?? [];
 

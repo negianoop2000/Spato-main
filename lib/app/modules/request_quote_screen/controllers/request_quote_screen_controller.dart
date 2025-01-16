@@ -10,6 +10,7 @@ class RequestQuoteScreenController extends GetxController {
   final count = 0.obs;
   var isLoading = false.obs;
   var productID = "".obs;
+  var productcode = "".obs;
   var selectedFile = Rx<File?>(null);
   var countryCode = '+49'.obs;
 
@@ -20,6 +21,14 @@ class RequestQuoteScreenController extends GetxController {
   TextEditingController sparePartsController = TextEditingController();
   TextEditingController quoteNeededController = TextEditingController();
   TextEditingController briefOverviewController = TextEditingController();
+
+
+
+  TextEditingController productidController = TextEditingController();
+  TextEditingController productcodeController = TextEditingController();
+  TextEditingController companymobileController = TextEditingController();
+  TextEditingController companyemailController = TextEditingController();
+
   var selectedBudgetOption = ''.obs;
 
   @override
@@ -27,11 +36,18 @@ class RequestQuoteScreenController extends GetxController {
     super.onInit();
     profileUserApi();
     if (Get.arguments != null) {
-      productID.value = Get.arguments.toString();
-      print('Product ID: ${productID.value}'); // Debug the productID
+      var args = Get.arguments as Map<String, dynamic>;
+      productID.value = args["productID"] ?? '';
+      productcode.value = args["productCode"] ?? '';
+
+      productidController.value = TextEditingValue(text: productID.value);
+      productcodeController.value = TextEditingValue(text: productcode.value);
+
+      print('Product ID: ${productID.value}, Product Code: ${productcode.value}');
     } else {
-      print('No arguments received'); // Debug if no arguments are passed
+      print('No arguments received');
     }
+
   }
 
   Future<void> pickFile() async {
@@ -80,10 +96,13 @@ class RequestQuoteScreenController extends GetxController {
       print('Profile user response: $response');
       if (response != null && response['success'] != null) {
         var userData = response['success'];
-        contactNameController.text = userData['name'] ?? '';
-        emailController.text = userData['email'] ?? '';
-        phoneController.text = userData['mobile'] ?? '';
+        contactNameController.text = response['userName'] ?? '';
+        emailController.text = response['userEmail'] ?? '';
+        phoneController.text = userData['userMobile'] ?? '';
         companyNameController.text = userData['company_name'] ?? '';
+        companyemailController.text = userData['company_mail']?? '';
+        companymobileController.text = userData['company_mobile']?? '';
+
       } else {
         //   Get.snackbar('Error', 'No Profile',duration: Duration(seconds: 1));
       }
@@ -101,7 +120,10 @@ class RequestQuoteScreenController extends GetxController {
 
       var response = await ApiService().submitQuotesApi(
         productID.value,
+        productcode.value,
         companyNameController.text,
+        companymobileController.text,
+        companyemailController.text,
         contactNameController.text,
         emailController.text,
         phoneController.text,
@@ -150,6 +172,8 @@ class RequestQuoteScreenController extends GetxController {
   void onClose() {
     companyNameController.dispose();
     contactNameController.dispose();
+    companymobileController.dispose();
+    companyemailController.dispose();
     emailController.dispose();
     phoneController.dispose();
     sparePartsController.dispose();

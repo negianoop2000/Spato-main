@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../../../common/localization.dart';
 import '../../../../utils/constants/app_text_styles.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../data/model/notification_model.dart';
 import '../controllers/notification_list_screen_controller.dart';
 import 'notification_item.dart';
 
@@ -74,34 +73,6 @@ class NotificationListScreenView extends StatelessWidget {
           }),
         ),
       ),
-    );
-  }
-
-  Future<void> _showCouponPopup(BuildContext context, String couponCode) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Coupon Code'),
-          content: Text('Use this code: $couponCode'),
-          actions: [
-            TextButton(
-              child: Text('Copy'),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: couponCode)); // Copy coupon code to clipboard
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Coupon copied to clipboard!')));
-                Navigator.of(context).pop(); // Close the popup
-              },
-            ),
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the popup
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

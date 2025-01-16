@@ -32,7 +32,8 @@ class SettingController extends GetxController {
     try {
       isLoading(true);
       var response = await ApiService().userLogoutApi();
-      if (response != null && response['status'] == 1) {
+    //  if (response != null && response['status'] == 1) {
+      if(response!=null){
         Get.snackbar('Success', response['message'] ?? 'Sign Out successful');
         await removeLogoutPreferences();
         await _removeCredentialsFromPreferences();

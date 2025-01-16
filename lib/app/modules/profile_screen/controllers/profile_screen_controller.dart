@@ -13,7 +13,7 @@ class ProfileScreenController extends GetxController {
   var userEmail = ''.obs;
   var userImage = ''.obs;
   var role = "".obs;
-
+  var shopList = <Map<String, dynamic>>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -22,7 +22,7 @@ class ProfileScreenController extends GetxController {
     initilize();
   }
   void initilize() {
-    print("My Profile //////// *********     hsdhfvadsh ===  \''fgbf'fsg ++++++++++++++++-------  ");
+    print("My Profile //////// *********     hsdhfvadsh ==='fgbf'fsg ++++++++++++++++-------  ");
     profileUserApi();
   }
 
@@ -40,11 +40,11 @@ class ProfileScreenController extends GetxController {
   }
   void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       dismissDirection: DismissDirection.horizontal,
       backgroundColor: TColors.primaryBackground,
       content: Center(
-          child: Text(message, style: TextStyle(color: TColors.textRed))),
+          child: Text(message, style: const TextStyle(color: TColors.textRed))),
     ));
   }
 
@@ -92,11 +92,31 @@ class ProfileScreenController extends GetxController {
   }
 
 
+  Future<void> getb2blist() async {
+    print("Fetching profile data");
+    try {
+      isLoading(true);
+      var response = await ApiService().getb2bshoplist();
+      if (response != null && response['shop_list'] != null) {
+        shopList.assignAll(List<Map<String, dynamic>>.from(response['shop_list']));
+        isLoading(false);
+      } else {
+        isLoading(false);
+        showSnackBar(Get.context!, "Failed to fetch shops data");
+      }
+    } catch (e) {
+      isLoading(false);
+      showSnackBar(Get.context!, "An error occurred");
+    }
+  }
+
   Future<void> logoutUser() async {
     try {
       isLoading(true);
       var response = await ApiService().userLogoutApi();
-      if (response != null && response['status'] == 1) {
+      // if (response != null && response['status'] == 1) {
+      if(response!=null){
+
         Get.snackbar('Success', response['message'] ?? 'Sign Out successful');
         await removeLogoutPreferences();
         Get.offNamed(Routes.LOGIN); // Navigate to login screen
@@ -135,15 +155,7 @@ class ProfileScreenController extends GetxController {
   }
 
 
-  @override
-    void onReady() {
-      super.onReady();
-    }
 
-    @override
-    void onClose() {
-      super.onClose();
-    }
 
 
     void increment() => count.value++;

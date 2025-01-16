@@ -199,7 +199,7 @@ class HomeView extends StatelessWidget {
                                             fontSize: 10,
                                             color: colorsecondary,
                                           ),),
-                                          Text("click & buy SPATO spare parts tool", style: AppTextStyles.black20.copyWith(
+                                          Text("Click & buy SPATO spare parts tool", style: AppTextStyles.black20.copyWith(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 8,
                                             color: colorsecondary,
@@ -211,7 +211,7 @@ class HomeView extends StatelessWidget {
                                                 children: [
                                                   Text("40K+", style: AppTextStyles.black20.copyWith(
                                                     fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                     color: colorsecondary,
                                                   ),),
                                                   Text("Order Completed", style: AppTextStyles.black20.copyWith(
@@ -225,7 +225,7 @@ class HomeView extends StatelessWidget {
                                                 children: [
                                                   Text("15K+", style: AppTextStyles.black20.copyWith(
                                                     fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                     color: colorsecondary,
                                                   ),),
                                                   Text("Satisfied Client", style: AppTextStyles.black20.copyWith(
@@ -415,103 +415,10 @@ class HomeView extends StatelessWidget {
                             }),
                           ],
                         ),
-
-
-
-
-
-
-                        // SizedBox(height: 12),
-                        // Obx(() =>  Text(
-                        //     "Categories: ${controller.categories[controller.selectedCategories.indexWhere((element) => element)]}",
-                        //     style: AppTextStyles.black20.copyWith(
-                        //       fontWeight: FontWeight.w600,
-                        //       fontSize: 20,
-                        //       color: colorsecondary,
-                        //     ),
-                        //   ),
-                        // ),
-
-                    //     SizedBox(height: 12),
-                    //     Obx(() => Wrap(
-                    //       spacing: 12,
-                    //       runSpacing: 12,
-                    //       children: List.generate(controller.categories.length, (index) {
-                    //         return GestureDetector(
-                    //           onTap: () {
-                    //             controller.toggleCategory(index);
-                    //           },
-                    //           child: Container(
-                    //             decoration: BoxDecoration(
-                    //               color: controller.selectedCategories[index]
-                    //                   ? TColors.colorprimaryLight
-                    //                   : TColors.colorprimaryLight.withOpacity(.10),
-                    //               borderRadius: BorderRadius.circular(38),
-                    //             ),
-                    //             child: Padding(
-                    //               padding: const EdgeInsets.all(12.0),
-                    //               child: Row(
-                    //                 mainAxisSize: MainAxisSize.min,
-                    //                 children: [
-                    //                   Container(height:36,width: 36,
-                    //                     child: ClipOval(
-                    //                       child: Image.asset(
-                    //                         controller.imagescategori[index],
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(width: 8),
-                    //                   Text(
-                    //                     controller.categories[index],
-                    //                     style: AppTextStyles.black16.copyWith(
-                    //                         fontWeight: FontWeight.w400, fontSize: 16, color: colorsecondary),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         );
-                    //       }),
-                    //     )),
-                    //     SizedBox(height: 20),
-                    //     Row(
-                    //       children: [
-                    //         Text(
-                    //           "Recommended",
-                    //           style: AppTextStyles.black20.copyWith(
-                    //               fontSize: 20,
-                    //               fontWeight: FontWeight.w600, color: colorsecondary),
-                    //         ),
-                    //         Spacer(),
-                    //                 InkWell(
-                    // onTap: () {
-                    //   String selectedCategory = controller.categories[controller.selectedCategories.indexWhere((element) => element)];
-                    //   String selectedImage = controller.imagescategori[controller.selectedCategories.indexWhere((element) => element)];
-                    //   List<ProductList> productList = controller.products.toList();
-                    //   Get.toNamed(Routes.ALL_PRODUCT, arguments: {'category': selectedCategory, 'products': productList,'image': selectedImage,});
-                    // },
-                    // child: Row(
-                    //   children: [
-                    //     Text(
-                    //       "See All ",
-                    //       style: AppTextStyles.textTitleMedium.copyWith(
-                    //         fontSize: 15,
-                    //         fontWeight: FontWeight.w600,
-                    //         color: TColors.colorprimaryLight,
-                    //       ),
-                    //     ),
-                    //     SvgPicture.asset(
-                    //       TImages.iconForwardThemem,
-                    //     ),
-                    //   ],
-                    // ),
-                    //                 ),
-                    //       ],
-                    //     ),
-                        SizedBox(height: 20),
-                                    Container(
-                    height: height*0.4,
-                    child:Obx(() {
+                        const SizedBox(height: 20),
+                        SizedBox(
+                            height: height*0.4,
+                            child:Obx(() {
                       if (controller.products.isEmpty) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 20,left: 40,right: 40),
@@ -572,7 +479,7 @@ class HomeView extends StatelessWidget {
                                           child: Center(
                                             child: product.imageUrl != null && product.imageUrl!.isNotEmpty
                                                 ? CachedNetworkImage(
-                                              imageUrl: product.imageUrl!,
+                                              imageUrl: product.bild1!,
                                               placeholder: (context, url) => Center(
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(20.0),
@@ -641,158 +548,6 @@ class HomeView extends StatelessWidget {
                             );
                           },
                         );
-                        //   GridView.builder(
-                        //     shrinkWrap: true,
-                        //     physics: NeverScrollableScrollPhysics(),
-                        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        //       crossAxisCount: 2,
-                        //       crossAxisSpacing: 10,
-                        //       mainAxisSpacing: 10,
-                        //       childAspectRatio: 0.8,
-                        //     ),
-                        //     itemCount: controller.products.length,
-                        //     itemBuilder: (context, index) {
-                        //       if (index >= controller.products.length) {
-                        //         return Center(child: Text('Invalid item index'));
-                        //       }
-                        //
-                        //       final product = controller.products[index];
-                        //       String imageBuild = product.bild1 ?? '';
-                        //
-                        //       return FutureBuilder<String?>(
-                        //         future: controller.get_image(imageBuild), // Call the get_image method
-                        //         builder: (context, snapshot) {
-                        //           if (snapshot.connectionState == ConnectionState.waiting) {
-                        //             return Center(
-                        //               child: CircularProgressIndicator(),
-                        //             );
-                        //           } else if (snapshot.hasError || !snapshot.hasData) {
-                        //             return Center(
-                        //               child: Image.asset("assets/images/no-item-found.png"),
-                        //             );
-                        //           } else {
-                        //             String imageUrl = snapshot.data ?? "assets/images/no-item-found.png";
-                        //
-                        //             return InkWell(
-                        //               onTap: () {
-                        //                 print('Selected index: $index');
-                        //                 Get.toNamed(
-                        //                   Routes.DETAIL_SCREEN,
-                        //                   arguments: {
-                        //                     'products': controller.products,
-                        //                     'index': index,
-                        //                   },
-                        //                 );
-                        //               },
-                        //               child: Container(
-                        //                 decoration: BoxDecoration(
-                        //                   color: TColors.colorprimaryLight.withOpacity(.10),
-                        //                   borderRadius: BorderRadius.circular(15),
-                        //                 ),
-                        //                 child: Padding(
-                        //                   padding: const EdgeInsets.all(8.0),
-                        //                   child: Column(
-                        //                     crossAxisAlignment: CrossAxisAlignment.start,
-                        //                     children: [
-                        //                       Expanded(
-                        //                         child: Container(
-                        //                           decoration: BoxDecoration(
-                        //                             borderRadius: BorderRadius.circular(15),
-                        //                           ),
-                        //                           child: Center(
-                        //                             child: CachedNetworkImage(
-                        //                               imageUrl: imageUrl,
-                        //                               placeholder: (context, url) => Center(
-                        //                                 child: Padding(
-                        //                                   padding: const EdgeInsets.all(20.0),
-                        //                                   child: CircularProgressIndicator(),
-                        //                                 ),
-                        //                               ),
-                        //                               errorWidget: (context, url, error) => Center(
-                        //                                 child: Image.asset("assets/images/no-item-found.png"),
-                        //                               ),
-                        //                               fit: BoxFit.cover,
-                        //                             ),
-                        //                           ),
-                        //                         ),
-                        //                       ),
-                        //                       Padding(
-                        //                         padding: const EdgeInsets.all(8.0),
-                        //                         child: Column(
-                        //                           crossAxisAlignment: CrossAxisAlignment.start,
-                        //                           children: [
-                        //                             Text(
-                        //                               "${product.artikelname ?? 'No Name'}",
-                        //                               style: AppTextStyles.textTitleLight.copyWith(
-                        //                                 color: TColors.colorlightgrey,
-                        //                               ),
-                        //                             ),
-                        //                             SizedBox(height: 4),
-                        //                             Row(
-                        //                               children: [
-                        //                                 Text(
-                        //                                   "⭐️",
-                        //                                   style: AppTextStyles.textTitleMedium.copyWith(
-                        //                                     fontWeight: FontWeight.w700,
-                        //                                     color: TColors.colorlightgrey,
-                        //                                   ),
-                        //                                 ),
-                        //                                 Text(
-                        //                                   "4.9",
-                        //                                   style: AppTextStyles.textTitleMedium.copyWith(
-                        //                                     fontWeight: FontWeight.w700,
-                        //                                     fontSize: 15,
-                        //                                     color: colorsecondary,
-                        //                                   ),
-                        //                                 ),
-                        //                                 Text(
-                        //                                   "(932)",
-                        //                                   style: AppTextStyles.textTitleMedium.copyWith(
-                        //                                     fontWeight: FontWeight.w700,
-                        //                                     color: TColors.colorlightgrey,
-                        //                                     fontSize: 13,
-                        //                                   ),
-                        //                                 ),
-                        //                               ],
-                        //                             ),
-                        //                             SizedBox(height: 4),
-                        //                             Row(
-                        //                               children: [
-                        //                                 Text(
-                        //                                   "${controller.formatPrice("${product.preisInklMwSt}")}€",
-                        //                                   style: AppTextStyles.textTitleMedium.copyWith(
-                        //                                     fontWeight: FontWeight.w700,
-                        //                                     fontSize: 15,
-                        //                                     color: colorsecondary,
-                        //                                   ),
-                        //                                 ),
-                        //                                 Spacer(),
-                        //                                 InkWell(
-                        //                                   onTap: () {
-                        //                                     print("Add to cart");
-                        //                                     controller.addToCartApi("${product.id}");
-                        //                                   },
-                        //                                   child: SvgPicture.asset(
-                        //                                     TImages.iconplus,
-                        //                                   ),
-                        //                                 ),
-                        //                               ],
-                        //                             ),
-                        //                           ],
-                        //                         ),
-                        //                       ),
-                        //                     ],
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //             );
-                        //           }
-                        //         },
-                        //       );
-                        //     },
-                        //   );
-
-
                       }
                     })
                                     ),

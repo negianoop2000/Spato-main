@@ -22,10 +22,12 @@ class Drawer_S extends StatelessWidget {
     try {
       isLoading(true);
       var response = await ApiService().userLogoutApi();
-      if (response != null && response['status'] == 1) {
+      // if (response != null && response['status'] == 1) {
+      if(response!=null){
+
         Get.snackbar('Success', response['message'] ?? 'Sign Out successful');
         await removeLogoutPreferences();
-        Get.offNamed(Routes.LOGIN); // Navigate to login screen
+        Get.offNamed(Routes.LOGIN);
       } else {
         isLoading(false);
         Get.snackbar('Error', response['message'] ?? 'Logout failed');

@@ -33,6 +33,7 @@ class MyOrderScreenController extends GetxController with SingleGetTickerProvide
   Future<void> showOrderHistory() async {
     try {
       isLoading(true);
+
       var response = await ApiService().orderHistory();
       if (response != null ) {
         orders.assignAll(response['orders']);

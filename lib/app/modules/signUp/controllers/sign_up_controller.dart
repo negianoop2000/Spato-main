@@ -64,6 +64,7 @@ class SignUpController extends GetxController {
       final pincode = prefs.getString('pincode') ?? '';
       final company = prefs.getString('companyName') ?? '';
       final vat_ID = prefs.getString('vatID') ?? '';
+      final referral_id = prefs.getString("referral_number") ?? '';
 
       var response = await ApiService().signup(
         emailController.text,
@@ -81,7 +82,8 @@ class SignUpController extends GetxController {
         agreeCheckBox.value,
         agreeCheckBox.value,
         company,
-        vat_ID
+        vat_ID,
+          referral_id
       );
 
       print('response-----$response');

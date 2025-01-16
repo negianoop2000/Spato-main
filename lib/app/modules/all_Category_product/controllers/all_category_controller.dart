@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
 
+import '../../../data/model/category_productList.dart';
+
 
 
 class AllcategoryController extends GetxController {
@@ -12,6 +14,9 @@ class AllcategoryController extends GetxController {
   var selectedMainCategory = Rx<MainCategory?>(null);
   var selectedSubcategoryPath = ''.obs;
 
+
+  var expandedCategories = <Category>[].obs;
+
   @override
   void onInit() async {
     super.onInit();
@@ -21,27 +26,17 @@ class AllcategoryController extends GetxController {
 
   List<String>? savedHerstNr;
 
-  // Future<void> loadSavedOptions() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   List<String>? savedOptions = prefs.getStringList('selectedOptions');
-  //   savedHerstNr = prefs.getStringList('selectedHerstNr');
-  //
-  //   if (savedOptions != null && savedHerstNr != null) {
-  //     print("Loaded options: ${savedOptions.join(', ')}");
-  //     print("Loaded Herst_Nr: ${savedHerstNr!.join(', ')}");
-  //     for (int i = 0; i < savedOptions.length; i++) {
-  //       print("Option: ${savedOptions[i]}, Herst_Nr: ${savedHerstNr![i]}");
-  //     }
-  //     getMainProductCategoryData();
-  //   } else {
-  //     print("No saved options or Herst_Nr found");
-  //   }
-  // }
-
   Future<void> getMainProductCategoryData() async {
     try {
       isLoading(true);
-      var response = await ApiService().getMainCategory();
+
+
+      var responseforuserid = await ApiService().fetchuserid(globalShopId??"");
+
+      print(responseforuserid);
+
+      String userid = responseforuserid['b2b_id']?? responseforuserid['userId'].toString();
+      var response = await ApiService().getMainCategory(userid: userid);
       print("API Response: $response"); // Debugging line
       if (response != null && response['getMainCategory1'] != null) {
         mainCategories.assignAll(parseCategories(response['getMainCategory1']));
@@ -78,22 +73,82 @@ class AllcategoryController extends GetxController {
   }
 
 
-  // Future<void> GetFilteredCategory(String mainCategory, List<int> selectedSupplierIndexes) async {
-  //   try {
-  //     isLoading(true);
-  //     var response = await ApiService().getDynamicFilterCategory(mainCategory, selectedSupplierIndexes);
-  //     if (response != null && response['Kategorie_2'] != null) {
-  //       var subCategoriesData = response['Kategorie_2'];
-  //       subCategories.assignAll(parseSubCategories(subCategoriesData));
-  //     } else {
-  //       print("No filtered categories found for $mainCategory");
-  //     }
-  //   } catch (e) {
-  //     print("Error filtering categories: $e");
-  //   } finally {
-  //     isLoading(false);
-  //   }
-  // }
+  var allProductList = <ProductList>[].obs;
+  var products = <ProductList>[].obs;
+
+
+  Future<void> productCategoriesApi(String category) async {
+    print("Selected Category: $category");
+    isLoading(true);
+    try {
+      var responseforuserid = await ApiService().fetchuserid(globalShopId);
+
+      print(responseforuserid);
+
+      String userid = responseforuserid['b2b_id'];
+      var response = await ApiService().productCategories(category,userid);
+      if (response != null) {
+        var allProduct = response['allProduct'] as List<dynamic>? ?? [];
+
+        allProductList.clear();
+        allProductList.addAll(allProduct.map((data) => ProductList.fromJson(data)).toList());
+
+        // Fetch images for products
+        for (var product in allProductList) {
+          if (product.bild1 != null) {
+            await get_image(product.bild1!);
+          }
+        }
+
+        // Update products list
+        products.value = allProductList;
+
+        update();
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+    } finally {
+      isLoading(false);
+      print("isLoading set to false");
+    }
+  }
+
+  Future<void> get_image(String imageBuild) async {
+    try {
+      var response = await ApiService().get_Image(imageBuild);
+
+      if (response is Map<String, dynamic>) {
+        if (response.containsKey('message') && response['message'] == "Image not found!") {
+          print("Image not found. Using dummy asset image.");
+          var dummyImageUrl = "assets/images/no-item-found.png";
+
+          for (var product in allProductList) {
+            if (product.bild1 == imageBuild) {
+              product.imageUrl = dummyImageUrl;
+            }
+          }
+        } else if (response.containsKey('url')) {
+          var imageUrl = response['url'];
+
+          for (var product in allProductList) {
+            if (product.bild1 == imageBuild) {
+              product.imageUrl = imageUrl;
+            }
+          }
+        } else {
+          print("Unexpected response format");
+        }
+
+        // Update the products list to reflect changes
+        products.value = allProductList;
+      } else {
+        print("Response is not a valid Map");
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+    }
+  }
+
 
   List<Category> parseSubCategories(dynamic json) {
     List<Category> parsedCategories = [];
@@ -119,25 +174,6 @@ class AllcategoryController extends GetxController {
     return parsedCategories;
   }
 
-
-  // List<Category> parseSubCategories(Map<String, dynamic> json) {
-  //   List<Category> parsedCategories = [];
-  //
-  //   json.forEach((key, value) {
-  //     List<Category> subCategories = [];
-  //     if (value is Map<String, dynamic>) {
-  //       subCategories = parseSubCategories(value);
-  //     }
-  //
-  //     parsedCategories.add(Category(
-  //       id: key,
-  //       name: key,
-  //       subCategories: subCategories,
-  //     ));
-  //   });
-  //
-  //   return parsedCategories;
-  // }
 
   List<MainCategory> parseCategories(List<dynamic> json) {
     return json.map((entry) {

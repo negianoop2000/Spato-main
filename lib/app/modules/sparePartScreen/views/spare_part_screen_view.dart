@@ -108,11 +108,9 @@ class SparePartScreenView extends StatelessWidget {
                                 child: SingleChildScrollView(
                                   controller: controller.verticalScrollController,
                                   scrollDirection: Axis.vertical,
-                                  child:
-
-                                  Container(
-                                    width: 1400,
-                                    height: 1400,
+                                  child: Container(
+                                    width: 2400,
+                                    height: 2400,
                                     child: Scrollbar(
                                       controller: controller.horizontalScrollController,
                                       trackVisibility: true,
@@ -121,52 +119,51 @@ class SparePartScreenView extends StatelessWidget {
                                         controller: controller.horizontalScrollController,
                                         scrollDirection: Axis.horizontal,
                                         child: GestureDetector(
-                                          key: _imageKey,
-                                          onTapUp: (details) {
-                                            final RenderBox renderBox = _imageKey.currentContext!.findRenderObject() as RenderBox;
-                                            double adjustedX = details.localPosition.dx * (1400 / renderBox.size.width);
-                                            double adjustedY = details.localPosition.dy * (1400 / renderBox.size.width);
-                                            controller.extractText_sparePart(adjustedX.toString(), adjustedY.toString(), sparePart.productId.toString());
+                                            key: _imageKey,
+                                            onTapUp: (details) {
+                                              final RenderBox renderBox = _imageKey.currentContext!.findRenderObject() as RenderBox;
+                                              double adjustedX = details.localPosition.dx * (2400 / renderBox.size.width);
+                                              double adjustedY = details.localPosition.dy * (2400 / renderBox.size.width);
+                                              controller.extractText_sparePart(adjustedX.toString(), adjustedY.toString(), sparePart.productId.toString());
 
-                                            // Update the tap position
-                                            controller.tapPosition.value = Offset(adjustedX, adjustedY);
-                                            print("sdbbdsdsba");
-                                            print(controller.tapPosition.value );
-                                            controller.AllTapPosition.add(Offset(adjustedX, adjustedY));
-                                            print(controller.AllTapPosition);
-                                          },
-                                          child: Stack(
-                                            children: [
-                                              CachedNetworkImage(
-                                                imageUrl: "https://spa2.de/storage/spare_part/images/${sparePart.articleImage}",
-                                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                                errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              Obx(() {
-                                                return Container(
-                                                  width: 1400,
-                                                  height: 1400,
-                                                  child: Stack(
-                                                    children: controller.AllTapPosition.map((position) {
-                                                      return Positioned(
-                                                        left: position.dx,
-                                                        top: position.dy,
-                                                        child: Container(
-                                                          width: 20,
-                                                          height: 20,
-                                                          decoration: BoxDecoration(
-                                                            shape: BoxShape.circle,
-                                                            color: TColors.colorprimaryLight,
+                                              // Update the tap position
+                                              controller.tapPosition.value = Offset(adjustedX, adjustedY);
+                                              controller.AllTapPosition.add(Offset(adjustedX, adjustedY));
+
+                                              //  getnumbers(sparePart);
+                                            },
+                                            child: Stack(
+                                              children: [
+                                                CachedNetworkImage(
+                                                  imageUrl: "https://spa2.de/storage/spare_part/images/${sparePart.articleImage}",
+                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                  errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                Obx(() {
+                                                  return Container(
+                                                    width: 2400,
+                                                    height: 2400,
+                                                    child: Stack(
+                                                      children: controller.AllTapPosition.map((position) {
+                                                        return Positioned(
+                                                          left: position.dx,
+                                                          top: position.dy,
+                                                          child: Container(
+                                                            width: 20,
+                                                            height: 20,
+                                                            decoration: BoxDecoration(
+                                                              shape: BoxShape.circle,
+                                                              color: TColors.colorprimaryLight,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                );
-                                              }),
-                                            ],
-                                          )
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  );
+                                                }),
+                                              ],
+                                            )
 
                                         ),
                                       ),

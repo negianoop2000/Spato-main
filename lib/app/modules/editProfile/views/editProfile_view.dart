@@ -152,7 +152,7 @@ class editProfileView extends StatelessWidget {
                       // ),
                       IntlPhoneField(
                         decoration: InputDecoration(
-                          labelText: 'Phone Number',
+                         // labelText: 'Phone Number',
                           labelStyle: TextStyle(color: Colors.grey),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(),
@@ -236,26 +236,85 @@ class editProfileView extends StatelessWidget {
                         TTexts.txtcountry,
                         style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                       ),
-                      TextInputField(
-                        height: 50,
-                        readOnly: true,
+                      // TextInputField(
+                      //   height: 50,
+                      //   readOnly: true,
+                      //   cursorColor: Colors.transparent,
+                      //   controller: controller.countryController,
+                      //   borderColor: Colors.grey,
+                      //   backgroundColor: Colors.white,
+                      //   hintText: TTexts.txtcountry,
+                      //   suffixIconWidget: IconButton(
+                      //     icon: Icon(controller.isDropdownOpen.value ? Icons.arrow_drop_up : Icons.arrow_drop_down,color: colorsecondary,),
+                      //     onPressed: () {
+                      //       controller.isDropdownOpen.value = !controller.isDropdownOpen.value;
+                      //     },
+                      //   ),
+                      //   enabledBorder: InputBorder.none,
+                      //   focusedBorder: InputBorder.none,
+                      //   onTap: () {
+                      //     controller.isDropdownOpen.value = true;
+                      //   },
+                      // ),
+                      // if (controller.isDropdownOpen.value)
+                      //   Container(
+                      //     height: 200,
+                      //     decoration: BoxDecoration(
+                      //       color: TColors.colorprimaryLight.withOpacity(.10),
+                      //       borderRadius: BorderRadius.circular(8),
+                      //     ),
+                      //     child: Scrollbar(
+                      //       child: ListView(
+                      //         children: CountryList.countries.map((country) {
+                      //           return ListTile(
+                      //             title: Text(country,style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),),
+                      //             onTap: () {
+                      //
+                      //               controller.selectedCountry.value = country;
+                      //               controller.countryController.text = controller.selectedCountry.value;
+                      //               controller.isDropdownOpen.value = false;
+                      //
+                      //             },
+                      //           );
+                      //         }).toList(),
+                      //       ),
+                      //     ),
+                      //   ),
+                      TextField(
+                        readOnly: false,
                         cursorColor: Colors.transparent,
                         controller: controller.countryController,
-                        borderColor: Colors.grey,
-                        backgroundColor: Colors.white,
-                        hintText: TTexts.txtcountry,
-                        suffixIconWidget: IconButton(
-                          icon: Icon(controller.isDropdownOpen.value ? Icons.arrow_drop_up : Icons.arrow_drop_down,color: colorsecondary,),
-                          onPressed: () {
-                            controller.isDropdownOpen.value = !controller.isDropdownOpen.value;
-                          },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: TTexts.txttypeyourcountry,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              controller.isDropdownOpen.value ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                              color: colorsecondary,
+                            ),
+                            onPressed: () {
+                              controller.isDropdownOpen.value = !controller.isDropdownOpen.value;
+                            },
+                          ),
                         ),
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
                         onTap: () {
-                          controller.isDropdownOpen.value = true;
+                          // Open the dropdown when the TextField is tapped
+                          if (!controller.isDropdownOpen.value) {
+                            controller.isDropdownOpen.value = true;
+                          }
+                        },
+                        onChanged: (value) {
+                          // Update the filteredCountries list based on the input value
+                          if (value.isEmpty) {
+                            controller.filteredCountries.assignAll(CountryList.countries); // Reset to all countries
+                          } else {
+                            controller.filteredCountries.assignAll(CountryList.countries.where((country) {
+                              return country.toLowerCase().contains(value.toLowerCase());
+                            }).toList());
+                          }
                         },
                       ),
+
                       if (controller.isDropdownOpen.value)
                         Container(
                           height: 200,
@@ -265,14 +324,17 @@ class editProfileView extends StatelessWidget {
                           ),
                           child: Scrollbar(
                             child: ListView(
-                              children: CountryList.countries.map((country) {
+                              children: controller.filteredCountries.map((country) {
                                 return ListTile(
-                                  title: Text(country,style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),),
+                                  title: Text(
+                                    country,
+                                    style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                                  ),
                                   onTap: () {
-
                                     controller.selectedCountry.value = country;
                                     controller.countryController.text = controller.selectedCountry.value;
                                     controller.isDropdownOpen.value = false;
+
 
                                   },
                                 );
@@ -280,7 +342,6 @@ class editProfileView extends StatelessWidget {
                             ),
                           ),
                         ),
-
                       SizedBox(height: 20),
                       Text(
                         TTexts.txtvat_number,

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:get/get.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/common/common_app_buttons.dart';
@@ -11,17 +10,15 @@ import 'package:spato_mobile_app/utils/constants/app_text_styles.dart';
 import 'package:spato_mobile_app/utils/constants/colors.dart';
 import 'package:spato_mobile_app/utils/constants/image_strings.dart';
 import 'package:spato_mobile_app/utils/constants/loader.dart';
-
 import '../controllers/profile_screen_controller.dart';
 
 class ProfileScreenView extends StatelessWidget {
-  ProfileScreenView({super.key});
-
-
+  const ProfileScreenView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ProfileScreenController controller = Get.find<ProfileScreenController>(tag: 'profile');
+    final ProfileScreenController controller =
+        Get.find<ProfileScreenController>(tag: 'profile');
     Color colorsecondary = Theme.of(context).brightness == Brightness.light
         ? TColors.colorsecondaryLight
         : TColors.colorsecondaryDark;
@@ -32,19 +29,14 @@ class ProfileScreenView extends StatelessWidget {
         ? TColors.colorlightgrey
         : TColors.darkerGrey;
     String fullImageUrl = ApiService.imageUrl;
-
-    Color iconselected = Theme.of(context).brightness == Brightness.light
-        ? TColors.colorprimaryLight
-        : TColors.white;
-    Color iconUnselected = Theme.of(context).brightness == Brightness.light
+    Color textColor = Theme.of(context).brightness == Brightness.light
         ? TColors.colordarkgrey
-        : TColors.colorprimaryLight;
-    var height = MediaQuery.of(context).size.height;
+        : TColors.white;
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile', style: AppTextStyles.black20.copyWith(color: colorsecondary)),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20),
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 20),
         ),
         actions: [
           InkWell(
@@ -75,7 +67,7 @@ class ProfileScreenView extends StatelessWidget {
       ),
       body: SafeArea(
         child: Obx(
-              () => Stack(
+          () => Stack(
             children: [
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -99,15 +91,18 @@ class ProfileScreenView extends StatelessWidget {
                             padding: const EdgeInsets.all(0.0),
                             child: ClipOval(
                               child: Obx(
-                                    () => CachedNetworkImage(
-                                  imageUrl: "$fullImageUrl${controller.userImage.value}",
-                                  placeholder: (context, url) => Center(
+                                () => CachedNetworkImage(
+                                  imageUrl:
+                                      "$fullImageUrl${controller.userImage.value}",
+                                  placeholder: (context, url) => const Center(
                                     child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(20.0),
                                       child: CircularProgressIndicator(),
                                     ),
                                   ),
-                                  errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/profile_dummy.png")),
+                                  errorWidget: (context, url, error) => Center(
+                                      child: Image.asset(
+                                          "assets/images/profile_dummy.png")),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -115,10 +110,13 @@ class ProfileScreenView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Obx(() => Text(controller.userName.value, style: AppTextStyles.black20.copyWith(color: colorsecondary))),
-                      Obx(() => Text(controller.userEmail.value, style: AppTextStyles.grey14)),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
+                      Obx(() => Text(controller.userName.value,
+                          style: AppTextStyles.black20
+                              .copyWith(color: colorsecondary))),
+                      Obx(() => Text(controller.userEmail.value,
+                          style: AppTextStyles.grey14)),
+                      const SizedBox(height: 8),
                       CommonAppButton(
                         width: 200,
                         height: 35,
@@ -131,7 +129,7 @@ class ProfileScreenView extends StatelessWidget {
                         btnTextStyle: AppTextStyles.grey16.copyWith(color: colorsecondary),
                         borderRadius: 12,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Default_Coustom(
                         onTap: () {
                           Get.toNamed(Routes.MY_ORDER_SCREEN);
@@ -139,13 +137,6 @@ class ProfileScreenView extends StatelessWidget {
                         svgImage: TImages.imgMyOrder,
                         text: 'My Order',
                       ),
-                      // Default_Coustom(
-                      //   onTap: () {
-                      //     Get.toNamed(Routes.GENERAL_SETTING);
-                      //   },
-                      //   svgImage: TImages.imggeneral,
-                      //   text: 'General Setting',
-                      // ),
                       Visibility(
                         visible: controller.role.value == "b2b",
                         child: Default_Coustom(
@@ -153,9 +144,133 @@ class ProfileScreenView extends StatelessWidget {
                             Get.toNamed(Routes.DASHBORD_B2B);
                           },
                           svgImage: TImages.imggeneral,
-                          text: 'B2B dashboard',
+                         // text:AppLocalization.of(context)!.translate('b2b_dashboard'),
+                          text:"B2B Dashboard"
+
                         ),
                       ),
+                      Visibility(
+                        visible: controller.role.value == "Admin",
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? TColors.colorlightgrey
+                                    : TColors.darkerGrey,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ListTile(
+                              leading: const Icon(Icons.shopify_sharp),
+                              title: Text(
+                                "B2B Shops",
+                               // AppLocalization.of(context)!.translate('b2b_shops'),
+                                style: AppTextStyles.black14.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: textColor,
+                                ),
+                              ),
+                              onTap: () async {
+                                controller.getb2blist();
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Choose B2B Shop'),
+                                      content: Obx(
+                                        () => controller.shopList.isEmpty
+                                            ?  const Center(
+                                                child:
+                                                Text('No Shop Available'))
+                                            : SizedBox(
+                                                width: double.maxFinite,
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: controller.shopList.length,
+                                                  itemBuilder: (context, index) {
+                                                    final shop = controller.shopList[index];
+                                                    return ListTile(
+                                                      title: Text(shop['name'] ?? 'Unknown'),
+                                                      subtitle: Text(shop['b2b_shop_id'] ?? 'Unknown Shop Name'),
+                                                      onTap: () {
+                                                        Get.toNamed(Routes.B2B_SHOP_ADMIN_SCREEN, parameters: {'userid': shop['user_id']});
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Close'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              trailing: SvgPicture.asset(
+                                TImages.lightArrowForward,
+                                colorFilter: ColorFilter.mode(
+                                  colorsecondary,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: controller.role.value == "b2b",
+                        child: Default_Coustom(
+                          onTap: () async {
+                            await controller.getb2blist(); // Fetch the B2B shop list
+
+                            // Check if any shop matches the username
+                            bool isShopFound = false;
+
+                            for (var shop in controller.shopList) {
+                              if (shop['name'] == controller.userName.value) {
+                                isShopFound = true;
+                                break;
+                              }
+                            }
+
+                            if (isShopFound) {
+                              // Navigate to B2B Shop Screen
+                              Get.toNamed(Routes.B2B_SHOP_SCREEN);
+                            } else {
+                              // Show "No Shop Available" alert if no match is found
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('No Shop Available'),
+                                    content: const Text('You do not have any B2B Shop matching your username.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Close'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          svgImage: TImages.imggeneral,
+                          text: 'B2B Shop',
+                        ),
+                      ),
+
                       Visibility(
                         visible: controller.role.value == "Normal",
                         child: Default_Coustom(
@@ -163,7 +278,7 @@ class ProfileScreenView extends StatelessWidget {
                             Get.toNamed(Routes.OFFER_ROLE_SCREEN);
                           },
                           svgImage: TImages.imggeneral,
-                          text: 'Offer',
+                          text:'Offer',
                         ),
                       ),
                       Visibility(
@@ -176,74 +291,90 @@ class ProfileScreenView extends StatelessWidget {
                           text: 'Supplier Dashboard',
                         ),
                       ),
-                      Logout_Coustom(
-                        onTap: () {
-                         //Get.offNamed(Routes.LOGIN);
-                         controller.logoutUser();
-                        },
-                        svgImage: TImages.imgLogout,
-                        text: 'Logout',
-                      ),
-                      // GestureDetector(
-                      //   onTap: () {
+
+
+
+                      // Default_Coustom(
+                      //   onTap: () async {
+                      //     String selectedLanguage =
+                      //     await LanguageHelper.getSavedLanguage(); // Load saved language
+                      //
                       //     Get.dialog(
                       //       AlertDialog(
-                      //         title: Text('Confirm Delete', style: AppTextStyles.black16.copyWith(color: colorsecondary,fontSize: 18)),
-                      //         content: Text('Are you sure you want to delete your account?', style: AppTextStyles.black14.copyWith(color: colorsecondary)),
+                      //         title: Text(AppLocalization.of(context)!.translate('choose_language')),
+                      //         content: StatefulBuilder(
+                      //           builder: (BuildContext context, StateSetter setState) {
+                      //             return SizedBox(
+                      //               width: double.maxFinite,
+                      //               child: ListView.builder(
+                      //                 shrinkWrap: true,
+                      //                 itemCount: LanguageHelper.languages.length,
+                      //                 itemBuilder: (context, index) {
+                      //                   final language = LanguageHelper.languages[index];
+                      //                   return ListTile(
+                      //                     title: Text(language['name']!),
+                      //                     leading: Radio<String>(
+                      //                       value: language['code']!,
+                      //                       groupValue: selectedLanguage,
+                      //                       onChanged: (String? value) {
+                      //                         if (value != null) {
+                      //                           setState(() {
+                      //                             selectedLanguage = value;
+                      //                           });
+                      //                         }
+                      //                       },
+                      //                     ),
+                      //                     onTap: () {
+                      //                       setState(() {
+                      //                         selectedLanguage = language['code']!;
+                      //                       });
+                      //                     },
+                      //                   );
+                      //                 },
+                      //               ),
+                      //             );
+                      //           },
+                      //         ),
                       //         actions: [
                       //           TextButton(
-                      //             onPressed: () {
-                      //               Get.back(); // Close the dialog
-                      //             },
-                      //             child: Text('Cancel', style: AppTextStyles.black20.copyWith(color: colorsecondary,fontSize: 18)),
+                      //             onPressed: () => Get.back(),
+                      //             child: Text(AppLocalization.of(context)!.translate('cancel')),
                       //           ),
                       //           TextButton(
-                      //             onPressed: () {
-                      //               Get.back(); // Close the dialog
-                      //               controller.deleteUser(); // Call deleteUser
+                      //             onPressed: () async {
+                      //               var localeParts = selectedLanguage.split('_');
+                      //               Locale locale = Locale(
+                      //                   localeParts[0], localeParts.length > 1 ? localeParts[1] : null);
+                      //               await LanguageHelper.saveLanguage(selectedLanguage); // Save language
+                      //               Get.updateLocale(locale);
+                      //               Get.back();
                       //             },
-                      //             child: Text('OK', style: AppTextStyles.black20.copyWith(color: colorsecondary,fontSize: 18)),
+                      //             child: Text(AppLocalization.of(context)!.translate('apply')),
                       //           ),
                       //         ],
                       //       ),
                       //     );
                       //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(bottom: 15),
-                      //     child: Container(
-                      //       width: double.infinity,
-                      //       decoration: BoxDecoration(
-                      //         color: background,
-                      //         borderRadius: BorderRadius.circular(15),
-                      //         border: Border.all(
-                      //           color: borderColor,
-                      //         ),
-                      //       ),
-                      //       child: ListTile(
-                      //         leading: Image.asset(
-                      //           "assets/images/delete-user.png",
-                      //           color: Colors.red,
-                      //           height: 30,
-                      //           width: 30,
-                      //         ),
-                      //         title: Text(
-                      //           "Delete account",
-                      //           style: AppTextStyles.black14.copyWith(fontWeight: FontWeight.w500).copyWith(color: TColors.textRed),
-                      //         ),
-                      //         trailing: SvgPicture.asset(TImages.lightArrowForward, color: TColors.textRed), // Arrow icon
-                      //       ),
-                      //     ),
-                      //   ),
+                      //   svgImage: TImages.imggeneral,
+                      //   text: AppLocalization.of(context)!.translate('select_language'),
                       // ),
 
 
+                      Logout_Coustom(
+                        onTap: () {
+                          controller.logoutUser();
+                        },
+                        svgImage: TImages.imgLogout,
+                        text: 'Logout',
+                      ),
                     ],
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.0),
-                child:  ShowLoader.isLoadingProgress(controller.isLoading.value),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.0),
+                child: ShowLoader.isLoadingProgress(controller.isLoading.value),
               )
             ],
           ),

@@ -55,7 +55,7 @@ class DashboardB2BController extends GetxController {
   Future<void> notificationsApi() async {
     isLoading(true);
     try {
-      var response = await ApiService().notificationsApi();
+      var response = await ApiService().adminnotificationsApi();
       print("API Response: $response");
 
       if (response != null) {

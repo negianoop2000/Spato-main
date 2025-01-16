@@ -14,6 +14,7 @@ import 'package:spato_mobile_app/utils/constants/api_service.dart';
 class editProfileController extends GetxController {
   final count = 0.obs;
   var isLoading = false.obs;
+  var filteredCountries = <String>[].obs;
   var image = Rx<File?>(null);
   var userImage = ''.obs;
   var userEmail = ''.obs;
@@ -50,8 +51,6 @@ class editProfileController extends GetxController {
       Get.snackbar('Error', 'Please enter a zip code',duration: Duration(seconds: 1));
     }else if (countryController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter a country',duration: Duration(seconds: 1));
-    }else if (vatNumberController.text.isEmpty) {
-      Get.snackbar('Error', 'Please enter a VAT number',duration: Duration(seconds: 1));
     } else if (repeatUserNameController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter a username',duration: Duration(seconds: 1));
     } else if (phoneNumberController.text.isEmpty) {

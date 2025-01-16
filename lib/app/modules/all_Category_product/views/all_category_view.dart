@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
@@ -87,30 +86,66 @@ class AllcategoryView extends StatelessWidget {
               var mainCategory = controller.mainCategories[index];
               return Column(
                 children: [
-                  GestureDetector(
-                    onTap: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      await prefs.setString('selectedMainCategoryName', mainCategory.name);
-                      print("=============446645456564654--------+++++++++++++ ${mainCategory.name}");
-                      controller.selectMainCategory(mainCategory);
-                    },
-                    child: Card(
-                      child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            mainCategory.imagePath ?? 'assets/images/no-item-found.png',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                          ),
+                  Card(
+                    child: ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child:Image.asset(
+                              () {
+                            String imagePath;
+                            switch (mainCategory.name) {
+                              case 'TECHNIK':
+                                imagePath = 'assets/icons/technology.jpg';
+                                break;
+                              case 'ATTRAKTIONEN':
+                                imagePath = 'assets/icons/attractionicon.jpg';
+                                break;
+                              case 'WASSERPFLEGE':
+                                imagePath = 'assets/icons/water.jpg';
+                                break;
+                              case 'POOLS':
+                                imagePath = 'assets/icons/pool_icon.jpg';
+                                break;
+                              case 'VERROHRUNG':
+                                imagePath = 'assets/icons/pipe.jpg';
+                                break;
+                              default:
+                                imagePath = 'assets/images/no-item-found.png';
+                                break;
+                            }
+                            return imagePath;
+                          }(),
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
                         ),
-                        title: Text(
+                      ),
+                      title: GestureDetector(
+                        onTap: () async {
+                          print("hhhhhhhhhhhhhhhhhhhhhhhh");
+                        //  await controller.productCategoriesApi(mainCategory.name); // Call the API when field is tapped
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString('MainCategory', mainCategory.name);
+
+                          //final selectedPath = path.isEmpty ? category.name : '$path~${category.name}';
+                        //  await prefs.setString('selectedSubcategoryPath', selectedPath);
+
+                          // Navigate to the products page
+                          Get.toNamed(Routes.ALL_PRODUCT);
+                        },
+                        child: Text(
                           mainCategory.name,
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        trailing: Icon(Icons.arrow_drop_down_outlined),
                       ),
+                      trailing: GestureDetector(
+                          onTap: () async{
+                             final prefs = await SharedPreferences.getInstance();
+                             await prefs.setString('selectedMainCategoryName', mainCategory.name);
+                             print("=============446645456564654--------+++++++++++++ ${mainCategory.name}");
+                             controller.selectMainCategory(mainCategory);
+                          },
+                          child: Icon(Icons.arrow_drop_down_outlined)),
                     ),
                   ),
                   Obx(() {
@@ -138,35 +173,116 @@ class AllcategoryView extends StatelessWidget {
   }
 
 
+  // Widget _buildCategoryTile(Category category, String path) {
+  //   if (category.subCategories.isEmpty) {
+  //     return GestureDetector(
+  //       onTap: () async {
+  //         controller.updateSelectedSubcategoryPath(category, path);
+  //         final selectedPath = controller.selectedSubcategoryPath.value;
+  //
+  //         final prefs = await SharedPreferences.getInstance();
+  //         await prefs.setString('selectedSubcategoryPath', selectedPath);
+  //         await prefs.setString('MainCategory', "");
+  //         print("gdfghdfbgdf++++++++++++++++++++++++        $selectedPath");
+  //         Get.toNamed(Routes.ALL_PRODUCT);
+  //       },
+  //       child: Card(
+  //         child: ListTile(
+  //           title: Text(
+  //             category.name,
+  //             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //           ),
+  //           trailing: Icon(Icons.arrow_forward_ios),
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     return Card(
+  //       child: ExpansionTile(
+  //         title: Text(category.name),
+  //         children: category.subCategories.map((subCategory) {
+  //           return _buildCategoryTile(subCategory, '$path~${category.name}');
+  //         }).toList(),
+  //       ),
+  //     );
+  //   }
+  // }
+
   Widget _buildCategoryTile(Category category, String path) {
     if (category.subCategories.isEmpty) {
-      return GestureDetector(
-        onTap: () async {
-          controller.updateSelectedSubcategoryPath(category, path);
-          final selectedPath = controller.selectedSubcategoryPath.value;
+      return Card(
+        child: ListTile(
+          title: GestureDetector(
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString('MainCategory', category.name);
 
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('selectedSubcategoryPath', selectedPath);
-          print("gdfghdfbgdf++++++++++++++++++++++++        $selectedPath");
-          Get.toNamed(Routes.ALL_PRODUCT);
-        },
-        child: Card(
-          child: ListTile(
-            title: Text(
+              Get.toNamed(Routes.ALL_PRODUCT);
+            },
+            child: Text(
               category.name,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            trailing: Icon(Icons.arrow_forward_ios),
           ),
+          trailing: GestureDetector(
+              onTap: () async {
+                controller.updateSelectedSubcategoryPath(category, path);
+                final selectedPath = controller.selectedSubcategoryPath.value;
+
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('selectedSubcategoryPath', selectedPath);
+                await prefs.setString('MainCategory', "");
+                print("Selected path: $selectedPath");
+                Get.toNamed(Routes.ALL_PRODUCT);
+              },
+              child: Icon(Icons.arrow_forward_ios)),
         ),
       );
     } else {
+      final isExpanded = controller.expandedCategories.contains(category);
       return Card(
-        child: ExpansionTile(
-          title: Text(category.name),
-          children: category.subCategories.map((subCategory) {
-            return _buildCategoryTile(subCategory, '$path~${category.name}');
-          }).toList(),
+        child: Column(
+          children: [
+            ListTile(
+              title: GestureDetector(
+                onTap: () async {
+                  controller.updateSelectedSubcategoryPath(category, path);
+                  final selectedPath = controller.selectedSubcategoryPath.value;
+
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('selectedSubcategoryPath', selectedPath);
+                  await prefs.setString('MainCategory', "");
+                  print("Selected path: $selectedPath");
+                  Get.toNamed(Routes.ALL_PRODUCT);
+                },
+                child: Text(
+                  category.name,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              trailing: GestureDetector(
+                onTap: () {
+                  if (isExpanded) {
+                    controller.expandedCategories.remove(category);
+                  } else {
+                    controller.expandedCategories.add(category);
+                  }
+                },
+                child: Icon(
+                  isExpanded
+                      ? Icons.arrow_drop_up_outlined
+                      : Icons.arrow_drop_down_outlined,
+                ),
+              ),
+            ),
+            if (isExpanded)
+              Column(
+                children: category.subCategories.map((subCategory) {
+                  return _buildCategoryTile(
+                      subCategory, '$path~${category.name}');
+                }).toList(),
+              ),
+          ],
         ),
       );
     }

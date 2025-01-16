@@ -1,13 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/common/bottomNavigationTap.dart';
-import 'package:spato_mobile_app/utils/constants/ShowToast.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
-import 'package:spato_mobile_app/utils/constants/colors.dart';
 
 class LoginController extends GetxController {
   //TODO: Implement LoginController
@@ -15,6 +10,12 @@ class LoginController extends GetxController {
   final count = 0.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  TextEditingController otpController = TextEditingController();
+
+
+
+  bool otpfieldvisible = false;
   var rememberMe = false.obs;
   late FocusNode emailFocusNode;
   late FocusNode passwordFocusNode;
@@ -97,34 +98,60 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<void> verifyotp(String email,  String otp) async{
+    var res = await ApiService().verifyOtp(email,otp );
+    print(res);
+
+  if(res['status']== 1) {
+    otpfieldvisible = false;
+    Get.snackbar(
+        'Success', res['success'], duration: const Duration(seconds: 2));
+  }
+
+  }
+
 
   Future<void> signInApi(BuildContext context, String email, String password) async {
     try {
-      isLoading(true);
+    //  isLoading(true);
 
-      // Proceed with the API call using the trimmed email
-      var response = await ApiService().loginApi(
-        email,
-        password,
-      );
-      print('response-----$response');
+      String shopId = "";
 
-      if (response['status'] == 1 && response['success'] == "Login Successfull") {
-        Get.snackbar('Success', response['success'], duration: Duration(seconds: 1));
-        await setPreferencesAndNavigate(response);
-        print("Navigating to BottomNavigationTap...");
-        Get.offAll(() => BottomNavigationTap());
-      } else if (response['status'] == 3 && response['error'] != null) {
-        Get.snackbar('Error', response['error'][0], duration: Duration(seconds: 3));
-      } else if (response['status'] == 2 && response['error'] != null) {
-        Get.snackbar('Error', response['error'][0], duration: Duration(seconds: 3));
-      } else if (response['status'] == 4 && response['error'] != null) {
-        Get.snackbar('Error', response['error'][0], duration: Duration(seconds: 3));
-      }
-      else {
-        // Get.snackbar('Error', 'An unknown error occurred', duration: Duration(seconds: 1));
+      try {
+        var responseformobileapi = await ApiService().loginformobile(email, password);
+        shopId = responseformobileapi['shop_id'] ?? "";
+      } catch (e) {
+        print('Error with loginformobile API: $e');
+      } finally {
+        var response = await ApiService().loginApi(email, password, shopId: shopId);
+        print('response-----$response');
+
+        if(response['show_otp_input']!=null){
+          otpfieldvisible = response['show_otp_input'];
+        }
+
+        if (response['status'] == 1 && response['success'] == "Login Successfull") {
+          Get.snackbar('Success', response['success'], duration: const Duration(seconds: 1));
+
+          if (shopId.isNotEmpty) {
+            globalShopId = shopId;
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('remembered_shopid', globalShopId!);
+          }
+
+          await setPreferencesAndNavigate(response);
+          print("Navigating to BottomNavigationTap...");
+          Get.offAll(() => BottomNavigationTap());
+        } else if (response['status'] == 3 && response['error'] != null) {
+          Get.snackbar('Error', response['error'][0], duration: const Duration(seconds: 3));
+        } else if (response['status'] == 2 && response['error'] != null) {
+          Get.snackbar('Error', response['error'][0], duration: const Duration(seconds: 3));
+        } else if (response['status'] == 4 && response['error'] != null) {
+          Get.snackbar('Error', response['error'][0], duration: const Duration(seconds: 3));
+        }
       }
     } catch (e) {
+      print('An error occurred: $e');
       // Get.snackbar('Error', 'An error occurred: $e', duration: Duration(seconds: 1));
     } finally {
       isLoading(false);
@@ -136,6 +163,7 @@ class LoginController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', response['token']);
     await prefs.setString('role', response['role']);
+
     print(response['token']);
     
   }
@@ -144,30 +172,34 @@ class LoginController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('remembered_email', emailController.text);
     await prefs.setString('remembered_password', passwordController.text);
+   // await prefs.setString('remembered_shopid', globalShopId ?? "");
+
   }
 
   Future<void> _removeCredentialsFromPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('remembered_email');
     await prefs.remove('remembered_password');
+    await prefs.remove('remembered_shopid');
   }
 
   Future<void> _loadRememberedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     String? rememberedEmail = prefs.getString('remembered_email');
     String? rememberedPassword = prefs.getString('remembered_password');
+    String? rememberedshopis = prefs.getString('remembered_shopid');
+    if(rememberedshopis!=null){
+      globalShopId = rememberedshopis;
+    }
+
     if (rememberedEmail != null && rememberedPassword != null) {
       emailController.text = rememberedEmail;
       passwordController.text = rememberedPassword;
       rememberMe.value = true;
-      print('Remembered email: $rememberedEmail, password: $rememberedPassword');
+    //  print('Remembered email: $rememberedEmail, password: $rememberedPassword');
     }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   void increment() => count.value++;
 }

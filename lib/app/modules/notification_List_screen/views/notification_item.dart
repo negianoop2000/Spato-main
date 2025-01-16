@@ -16,10 +16,17 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine secondary color based on theme
     Color colorSecondary = Theme.of(context).brightness == Brightness.light
         ? TColors.colorsecondaryLight
         : TColors.colorsecondaryDark;
 
+    // Determine text colors based on theme
+    bool isLightTheme = Theme.of(context).brightness == Brightness.light;
+    Color primaryTextColor = isLightTheme ? Colors.black : Colors.white;
+    Color secondaryTextColor = isLightTheme ? Colors.grey[700]! : Colors.grey[400]!;
+
+    // Seen status logic
     bool seenStatus = notification.seenStatus;
     int seenStatusInt = seenStatus ? 0 : 1;
 
@@ -39,24 +46,31 @@ class NotificationItem extends StatelessWidget {
                 children: [
                   Text(
                     notification.title,
-                    style: seenStatusInt == 1
-                        ? AppTextStyles.white16.copyWith(fontWeight: FontWeight.bold)
-                        : AppTextStyles.grey16,
+                    style: TextStyle(
+                      color: seenStatusInt == 1 ? primaryTextColor : secondaryTextColor,
+                      fontSize: 16,
+                      fontWeight: seenStatusInt == 1 ? FontWeight.bold : FontWeight.normal,
+                    ),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    _formatBodyText(notification.body),
-                    style: seenStatusInt == 1
-                        ? AppTextStyles.white14.copyWith(fontWeight: FontWeight.bold)
-                        : AppTextStyles.grey12,
+                    notification.body,
+                    style: TextStyle(
+                      color: seenStatusInt == 1 ? primaryTextColor : secondaryTextColor,
+                      fontSize: 14,
+                      fontWeight: seenStatusInt == 1 ? FontWeight.bold : FontWeight.normal,
+                    ),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     DateFormat('yyyy-MM-dd – kk:mm').format(notification.createdAt),
-                    style: AppTextStyles.grey12,
+                    style: TextStyle(
+                      color: secondaryTextColor,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -82,12 +96,12 @@ class NotificationItem extends StatelessWidget {
     }
   }
 
-  String _formatBodyText(String body) {
-    String formattedBody = body.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
-
-    print('Original Body: $body');
-    print('Formatted Body: $formattedBody');
-
-    return formattedBody;
-  }
+  // String _formatBodyText(String body) {
+  //   String formattedBody = body.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+  //
+  //   print('Original Body: $body');
+  //   print('Formatted Body: $formattedBody');
+  //
+  //   return formattedBody;
+  // }
 }

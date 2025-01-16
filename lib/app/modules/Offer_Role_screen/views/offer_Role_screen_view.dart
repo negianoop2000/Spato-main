@@ -113,7 +113,7 @@ class offer_RoleScreenView extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    "Status: ${isClaimed ? 'schließen' : isOpen ? 'Open' : 'Expired'}",
+                                    "Status: ${isClaimed ? 'Claimed' : isOpen ? 'Open' : 'Expired'}",
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,

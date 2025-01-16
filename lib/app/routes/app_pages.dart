@@ -1,7 +1,12 @@
 import 'package:get/get.dart';
+import 'package:spato_mobile_app/app/B2B_Modules/b2b_shop/controllers/b2b_shop.dart';
+import 'package:spato_mobile_app/app/B2B_Modules/b2b_shop/views/b2b_shop_view.dart';
 
 import '../B2B_Modules/address_book/bindings/addressbook.dart';
 import '../B2B_Modules/address_book/views/addressbook.dart';
+import '../B2B_Modules/b2b_shop/bindings/b2b_shop.dart';
+import '../B2B_Modules/b2b_shop/bindings/b2b_shop_admin.dart';
+import '../B2B_Modules/b2b_shop/views/b2b_shop_admin_view.dart';
 import '../B2B_Modules/bills/bindings/bills.dart';
 import '../B2B_Modules/bills/views/bills.dart';
 import '../B2B_Modules/credit_notes/bindings/creditNotes.dart';
@@ -375,5 +380,16 @@ class AppPages {
       page: () => SparePartScreenView(),
       binding: SparePartScreenBinding(),
     ),
+    GetPage(
+      name: _Paths.B2B_SHOP_SCREEN,
+      page: () =>  B2bShopView(),
+      binding: B2BShopBinding(),
+    ),
+    GetPage(
+      name: _Paths.B2B_SHOP_ADMIN_SCREEN,
+      page: () => B2bShopAdmin(userid: Get.parameters['userid'] ?? ''),
+      binding: B2BShopAdminBinding(),
+    ),
+
   ];
 }

@@ -69,11 +69,11 @@ class CheckoutShippingView extends StatelessWidget {
                       child:  ShowLoader.isLoadingProgress(controller.isLoading.value),
                     ));
                   } else if (controller.addresses.isEmpty) {
-                    return Center(child: Text('No addresses available.'));
+                    return const Center(child: Text('No addresses available.'));
                   } else {
                     return ListView.separated(
                       itemCount: controller.addresses.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 10),
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         final address = controller.addresses[index];
                         return Container(
@@ -109,34 +109,32 @@ class CheckoutShippingView extends StatelessWidget {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CommonAppButton(
-                width: double.infinity,
-                color: TColors.colorprimaryLight,
-                onPressed: () {
-                  controller.printAddressesAndSelectedId();
-                  controller.addOrderApi();
-                },
-                buttonText: "Continue",
-              ),
-              SizedBox(height: 12),
-              CommonAppButton(
-                width: double.infinity,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? TColors.colorlightgrey.withOpacity(.10)
-                    : Colors.grey.shade700,
-                onPressed: () {
-                  Get.toNamed(Routes.CHECKOUT_INFORMATION, arguments: {'callback': controller.addressListFetched});
-                },
-                buttonText: "Add New Address",
-                btnTextStyle: TextStyle(color: colorsecondary),
-              ),
-              SizedBox(height: 12),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CommonAppButton(
+              width: double.infinity,
+              color: TColors.colorprimaryLight,
+              onPressed: () {
+                controller.printAddressesAndSelectedId();
+                controller.checkOut(context);
+              },
+              buttonText: "Continue",
+            ),
+            const SizedBox(height: 12),
+            CommonAppButton(
+              width: double.infinity,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? TColors.colorlightgrey.withOpacity(.10)
+                  : Colors.grey.shade700,
+              onPressed: () {
+                Get.toNamed(Routes.CHECKOUT_INFORMATION, arguments: {'callback': controller.addressListFetched});
+              },
+              buttonText: "Add New Address",
+              btnTextStyle: TextStyle(color: colorsecondary),
+            ),
+            const SizedBox(height: 12),
+          ],
         ),
       ),
     );

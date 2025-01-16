@@ -10,6 +10,7 @@ class CheckoutInformationController extends GetxController {
   var isLoading = false.obs;
   var filteredCountries = <String>[].obs;
 
+  final FocusNode countryFocusNode = FocusNode();
 
   TextEditingController cityController = TextEditingController();
   TextEditingController zipCodeController = TextEditingController();
@@ -34,6 +35,8 @@ class CheckoutInformationController extends GetxController {
   void onReady() {
     super.onReady();
   }
+
+
 
   Future<void> profileUserApi() async {
     print("Fetching profile data");
@@ -119,6 +122,7 @@ class CheckoutInformationController extends GetxController {
     repeatUserNameController.dispose();
     phoneNumberController.dispose();
     streetnameController.dispose();
+    countryFocusNode.dispose();
     super.onClose();
   }
 

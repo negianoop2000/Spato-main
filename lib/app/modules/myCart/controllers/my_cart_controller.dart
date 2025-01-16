@@ -255,9 +255,12 @@ class MyCartController extends GetxController {
         return;
       }
 
-      var response = await ApiService().applyDiscCodeApi(applyDiscCode, originalSummaryTotal);
-      if (response != null && response['message'] != null) {
-        if (response['coupon'] != null) {
+      String shopId = globalShopId ?? "";
+
+      var response = await ApiService().applyDiscCodeApi(applyDiscCode, originalSummaryTotal, shopId: shopId);
+
+      if (response != null) {
+        if (response['message'] != null && response['coupon'] != null) {
           var coupon = response['coupon'];
           if (coupon['Typ'] == '%' && coupon['Rate'] != null) {
             double discountRate = double.parse(coupon['Rate']);
@@ -266,45 +269,70 @@ class MyCartController extends GetxController {
             discountAmount = double.parse(coupon['Rate']);
           }
           isCouponApplied.value = true;
+        } else if (response['errors'] != null) {
+          // Show snackbar message for invalid discount code
+
+          Get.snackbar('Error', response['errors'], duration: Duration(seconds: 1));
+
+        } else {
+          // Reset discount if the coupon is invalid
+          discountAmount = 0.0;
+          isCouponApplied.value = false;
         }
       } else {
-        // Reset discount if the coupon is invalid
-        discountAmount = 0.0;
-        isCouponApplied.value = false;
+        // Show snackbar message for unexpected null response
+        Get.snackbar('Error','Failed to apply discount. Please try again.', duration: Duration(seconds: 1));
+
       }
+
       updateOrderTotal(); // Recalculate totals with or without discount
     } catch (e) {
       // Handle exceptions and reset discount
       discountAmount = 0.0;
       isCouponApplied.value = false;
+
+      Get.snackbar('Error', 'An error occurred: $e', duration: Duration(seconds: 1));
+
     } finally {
       isLoading(false);
     }
   }
 
+  Future<void> updateCartApi(String productid,int quantity) async {
+    //  isLoading(true);
+    try {
+      var response = await ApiService().updateCartApi(productid, quantity);
+      if (response['message'] == "Quantity updated successfully") {
+        Get.snackbar('Success', response['message'], duration: Duration(seconds: 1));
+      } else {
+        Get.snackbar('Error', 'Added to cart unsuccessfully', duration: Duration(seconds: 1));
+      }
+    } finally {
+      //   isLoading(false);
+    }
+  }
 
 
 
   Future<void> savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('subtotal', subtotal.value);
-    await prefs.setDouble('tax', tax.value);
-    await prefs.setDouble('orderTotal', orderTotal.value);
-    await prefs.setDouble('discountedTotal', discountedTotal.value);
+    // await prefs.setDouble('subtotal', subtotal.value);
+    // await prefs.setDouble('tax', tax.value);
+    // await prefs.setDouble('orderTotal', orderTotal.value);
+    // await prefs.setDouble('discountedTotal', discountedTotal.value);
     await prefs.setString('userID', userID.value);
     await prefs.setBool('isCouponApplied', isCouponApplied.value);
     await prefs.setString('couponCode', couponCodeController.value.text);
 
     // Ensure the IDs are strings
-    List<String> productIds = productsClaim.map((product) => product.id.toString()).toList();
-    List<String> productQuantities = productsClaim.map((product) => product.count.toString()).toList();
-    List<String> productPrices = productsClaim.map((product) => product.price).toList();
+     List<String> productIds = productsClaim.map((product) => product.id.toString()).toList();
+     List<String> productQuantities = productsClaim.map((product) => product.count.toString()).toList();
+     List<String> productPrices = productsClaim.map((product) => product.price).toList();
 
-    await prefs.setStringList('productIds', productIds);
-    await prefs.setStringList('productQuantities', productQuantities);
-    await prefs.setStringList('productPrices', productPrices);
+     await prefs.setStringList('productIds', productIds);
+     await prefs.setStringList('productQuantities', productQuantities);
+     await prefs.setStringList('productPrices', productPrices);
 
-    print("Saved product details: IDs: $productIds, Quantities: $productQuantities, Prices: $productPrices");
   }
 
   Future<void> launchInBrowser(Uri url) async {

@@ -20,6 +20,8 @@ class SignUpInfoController extends GetxController {
   var userCityController = TextEditingController();
   var userCountryController = TextEditingController();
   var userPincodeController = TextEditingController();
+  var userReferralController = TextEditingController();
+
   var userCompanyController = TextEditingController();
   var userVatIdController = TextEditingController();
   var countryCode = '+49'.obs;
@@ -95,6 +97,8 @@ class SignUpInfoController extends GetxController {
     await prefs.setString('vatID', userVatIdController.text);
     await prefs.setString('country_code', countryCode.value);
     await prefs.setString('selected_role', selectedRole.value);
+    await prefs.setString('referral_number', userReferralController.text);
+
 
   }
 

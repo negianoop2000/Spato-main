@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/common/bottomNavigationTap.dart';
 import 'package:spato_mobile_app/utils/Connectivity.dart';
+
+import '../../../../utils/constants/api_service.dart';
 class SplashController extends GetxController {
   // final ConnectivityService connectivityService = Get.find();
   final count = 0.obs;
@@ -40,9 +42,13 @@ class SplashController extends GetxController {
     print(authToken);
     print("Navigating to home screen in 3 seconds...");
     final role = prefs.getString('role');
-
+    String? rememberedshopis = prefs.getString('remembered_shopid');
+    if(rememberedshopis!=null){
+      globalShopId = rememberedshopis;
+    }
     Timer(Duration(seconds: 3), () {
       if (authToken != null) {
+
         print("Navigating to BottomNavigationTap...");
         Get.offAll(() => BottomNavigationTap());
         //Get.offAllNamed(Routes.INTRO_V_C);

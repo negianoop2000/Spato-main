@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:get/get.dart';
 import 'package:spato_mobile_app/app/data/country_list.dart';
-import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/common/common_app_buttons.dart';
 import 'package:spato_mobile_app/utils/constants/app_text_styles.dart';
 import 'package:spato_mobile_app/utils/constants/colors.dart';
@@ -77,7 +76,7 @@ class CheckoutInformationView extends StatelessWidget {
                                   "Name",
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 TextInputField(
                                   height: 50,
                                   controller: controller.repeatUserNameController,
@@ -92,12 +91,12 @@ class CheckoutInformationView extends StatelessWidget {
                                   },
 
                                 ),
-                                SizedBox(height: 15,),
+                                const SizedBox(height: 15,),
                                 Text(
                                   "Phone",
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 // TextInputField(
                                 //   height: 50,
                                 //   controller: controller.phoneNumberController,
@@ -112,7 +111,7 @@ class CheckoutInformationView extends StatelessWidget {
                                 //
                                 // ),
                                 IntlPhoneField(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Phone Number',
                                     labelStyle: TextStyle(color: Colors.grey),
                                     border: OutlineInputBorder(
@@ -131,7 +130,7 @@ class CheckoutInformationView extends StatelessWidget {
                                   "Email",
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 TextInputField(
                                   height: 50,
                                   controller: controller.emailControler,
@@ -146,12 +145,12 @@ class CheckoutInformationView extends StatelessWidget {
 
                                 ),
 
-                                SizedBox(height: 15,),
+                                const SizedBox(height: 15,),
                                 Text(
                                   "Street Name",
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5,),
+                                const SizedBox(height: 5,),
                                 TextInputField(
                                   height: 50,
                                   borderColor: borderColor,
@@ -164,7 +163,7 @@ class CheckoutInformationView extends StatelessWidget {
                                 ),
 
 
-                                SizedBox(height:15),
+                                const SizedBox(height:15),
                                 // TextInputField(
                                 //   height: 50,
                                 //   controller: controller.addressController,
@@ -181,7 +180,7 @@ class CheckoutInformationView extends StatelessWidget {
                                   "Street Number",
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5,),
+                                const SizedBox(height: 5,),
                                 TextInputField(
                                   height: 50,
                                   borderColor: borderColor,
@@ -192,12 +191,12 @@ class CheckoutInformationView extends StatelessWidget {
                                   hintText: TTexts.txtenterstreetnumber,
                                   onTap: () {controller.isDropdownOpen.value = false;},
                                 ),
-                                SizedBox(height: 15,),
+                                const SizedBox(height: 15,),
                                 Text(
                                   TTexts.txtPostalCode,
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 TextInputField(
                                   height: 50,
                                   controller: controller.zipCodeController,
@@ -205,7 +204,7 @@ class CheckoutInformationView extends StatelessWidget {
                                   backgroundColor: background,
                                   focusedBorder: InputBorder.none,
                                   enabledBorder: InputBorder.none,
-                                  keyboardType: TextInputType.numberWithOptions(),
+                                  keyboardType: const TextInputType.numberWithOptions(),
 
                                   hintText:  TTexts.txttypeyourpostalcode,
                                   onTap: () {
@@ -214,12 +213,12 @@ class CheckoutInformationView extends StatelessWidget {
 
                                 ),
 
-                                SizedBox(height: 15,),
+                                const SizedBox(height: 15,),
                                 Text(
                                   TTexts.txtCity,
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 TextInputField(
                                   height: 50,
                                   controller: controller.cityController,
@@ -234,15 +233,15 @@ class CheckoutInformationView extends StatelessWidget {
                                   },
 
                                 ),
-                                SizedBox(height: 15,),
+                                const SizedBox(height: 15,),
                                 Text(
                                   TTexts.txtcountry,
                                   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 // Create a new TextField for inputting country names
                                 TextField(
-                                 // height: 50,
+                                  focusNode: controller.countryFocusNode, // FocusNode to detect focus
                                   readOnly: false,
                                   cursorColor: Colors.transparent,
                                   controller: controller.countryController,
@@ -259,6 +258,12 @@ class CheckoutInformationView extends StatelessWidget {
                                       },
                                     ),
                                   ),
+                                  onTap: () {
+                                    // Open the dropdown when the TextField is tapped
+                                    if (!controller.isDropdownOpen.value) {
+                                      controller.isDropdownOpen.value = true;
+                                    }
+                                  },
                                   onChanged: (value) {
                                     // Update the filteredCountries list based on the input value
                                     if (value.isEmpty) {
@@ -290,6 +295,9 @@ class CheckoutInformationView extends StatelessWidget {
                                               controller.selectedCountry.value = country;
                                               controller.countryController.text = controller.selectedCountry.value;
                                               controller.isDropdownOpen.value = false;
+
+                                              // Unfocus the TextField after selection
+                                              controller.countryFocusNode.unfocus();
                                             },
                                           );
                                         }).toList(),
@@ -297,26 +305,7 @@ class CheckoutInformationView extends StatelessWidget {
                                     ),
                                   ),
 
-                                // TextInputField(
-                                //   height: 50,
-                                //   controller: controller.countryController,
-                                //   borderColor: borderColor,
-                                //   backgroundColor: background,
-                                //   focusedBorder: InputBorder.none,
-                                //   enabledBorder: InputBorder.none,
-                                //
-                                //   hintText: "type your country",
-                                //   onTap: () {
-                                //
-                                //   },
-                                //
-                                // ),
-
-                                SizedBox(height: 15,),
-
-
-
-
+                                const SizedBox(height: 15,),
                                 CommonAppButton(
                                   color: TColors.colorprimaryLight,
                                   width: double.infinity,
@@ -326,13 +315,6 @@ class CheckoutInformationView extends StatelessWidget {
                                   buttonText: "Add Address",
 
                                 ),
-
-
-
-
-
-
-
                               ],
                             ),
                             //  ]

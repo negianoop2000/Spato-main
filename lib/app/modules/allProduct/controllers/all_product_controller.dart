@@ -8,6 +8,8 @@ import 'package:spato_mobile_app/utils/constants/api_service.dart';
 class AllProductController extends GetxController {
   var products = <ProductList>[].obs;
   late String selectedCategory;
+  late String mainCategory;
+
   late String selectedSubCategory;
   late String Category;
   late String selectedImage;
@@ -22,18 +24,24 @@ class AllProductController extends GetxController {
 
   Future<void> loadSavedOptions() async {
     final prefs = await SharedPreferences.getInstance();
+    mainCategory = prefs.getString("MainCategory")??'';
 
     selectedCategory = prefs.getString("selectedMainCategoryName") ?? '';
     selectedSubCategory = prefs.getString("selectedSubcategoryPath") ?? '';
-    final find = '~~';
-    final replaceWith = '~';
+    const find = '~~';
+    const replaceWith = '~';
     Category = "$selectedCategory~$selectedSubCategory";
     final newString = Category.replaceAll(find, replaceWith);
     savedHerstNr = prefs.getStringList('selectedHerstNr');
     List<int> selectedSupplierIndexes = savedHerstNr?.map(int.parse).toList() ?? [];
 
 
-    await GetFilteredProduct(newString, selectedSupplierIndexes);
+    if(mainCategory!=""){
+      await GetFilteredProduct(mainCategory, selectedSupplierIndexes);
+    }else{
+      await GetFilteredProduct(newString, selectedSupplierIndexes);
+
+    }
   }
 
   Future<void> GetFilteredProduct(String mainCategory, List<int> selectedSupplierIndexes) async {
@@ -52,10 +60,9 @@ class AllProductController extends GetxController {
           }
         }));
 
-      } else {
       }
     } catch (e) {
-
+      print("error $e");
     } finally {
       isLoading(false);
     }
@@ -80,11 +87,10 @@ class AllProductController extends GetxController {
               product.imageUrl = imageUrl;
             }
           }
-        } else {
         }
-      } else {
       }
     } catch (e) {
+      print("error $e");
     }
   }
 

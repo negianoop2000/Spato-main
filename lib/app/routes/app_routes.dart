@@ -56,6 +56,10 @@ abstract class Routes {
   static const DELIVERY_CONDITION = _Paths.DELIVERY_CONDITION;
   static const ALL_CATEGORY = _Paths.ALL_CATEGORY;
   static const SPARE_PART_SCREEN = _Paths.SPARE_PART_SCREEN;
+  static const B2B_SHOP_SCREEN = _Paths.B2B_SHOP_SCREEN;
+  static const B2B_SHOP_ADMIN_SCREEN = _Paths.B2B_SHOP_ADMIN_SCREEN;
+
+
 }
 
 abstract class _Paths {
@@ -113,4 +117,7 @@ abstract class _Paths {
   static const DELIVERY_CONDITION = '/delivery-condition';
   static const ALL_CATEGORY = '/all_category';
   static const SPARE_PART_SCREEN = '/spare-part-screen';
+  static const B2B_SHOP_SCREEN = '/b2b-shop-screen';
+  static const B2B_SHOP_ADMIN_SCREEN = '/b2b-shop-admin-screen';
+
 }

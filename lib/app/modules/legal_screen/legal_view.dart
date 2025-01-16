@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:get/get.dart';
 import 'package:spato_mobile_app/utils/constants/app_text_styles.dart';
 import 'package:spato_mobile_app/utils/constants/colors.dart';
@@ -62,122 +63,27 @@ class WordDocView extends GetView<WordDocController> {
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Legal Notice\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "SPATO GmbH\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text:
-                    "Schellberger Weg 34\n42659 Solingen Germany\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text: "Contact:\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "Email: info@spato.de\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text: "Represented by the Managing Director:\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text:
-                    "Mr. Oliver Laug, contact details as above\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text: "Commercial Register:\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text:
-                    "Register Court: Wuppertal District Court\nRegistration Number: HRB 32131\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text: "VAT ID:\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "DE346441844\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text: "Content Responsibility:\n\n",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text:
-                    "Mr. Oliver Laug, contact details as above\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text:
-                    "The European Commission provides an online dispute resolution (ODR) platform, which can be accessed via the following link: ",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text: "https://ec.europa.eu/consumers/odr.\n\n",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        launch("https://ec.europa.eu/consumers/odr");
-                      },
-                  ),
-                  TextSpan(
-                    text:
-                    "This platform serves as a point of contact for out-of-court settlements of disputes arising from online purchase or service contracts involving a consumer. We are neither obliged nor willing to participate in a dispute resolution procedure before a consumer arbitration board.\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                  TextSpan(
-                    text:
-                    "However, we would like to point out that our direct purchase offer currently targets business customers only.\n\n",
-                    style: TextStyle(color: textColor),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      body: Obx(
+            () {
+          if (controller.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          return  SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: HtmlWidget(
+                controller.docxContent.value,
+                onTapUrl: (url) {
+                  // Handle the URL tap event
+                  if (url.startsWith("http")) {
+                    launchUrl(Uri.parse(url)); // Use url_launcher to open the URL
+                  }
+                  return true;
+                },
+              )
+
+          );
+        },
       ),
     );
   }

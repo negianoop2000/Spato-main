@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:spato_mobile_app/common/common_app_buttons.dart';
 import 'package:spato_mobile_app/utils/constants/app_text_styles.dart';
 import 'package:spato_mobile_app/utils/constants/colors.dart';
@@ -10,7 +11,6 @@ import 'package:spato_mobile_app/utils/constants/common_input_fields.dart';
 import 'package:spato_mobile_app/utils/constants/image_strings.dart';
 import 'package:spato_mobile_app/utils/constants/loader.dart';
 import 'package:spato_mobile_app/utils/constants/text_strings.dart';
-import 'package:spato_mobile_app/utils/helpers/countrypic/intl_phone_field.dart';
 
 import '../controllers/request_quote_screen_controller.dart';
 
@@ -72,6 +72,39 @@ class RequestQuoteScreenView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
+                      Text(
+                        "Product Id",
+                        style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                      ),
+                      TextInputField(
+                        height: 50,
+                         controller: controller.productidController,
+                        borderColor: borderColor,
+                        backgroundColor: background,
+                        hintText: "product id",
+                        hintStyle: TextStyle(color: colorsecondary1),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        onTap: () {},
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Product Code",
+                        style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                      ),
+                      TextInputField(
+                        height: 50,
+                         controller: controller.productcodeController,
+                        borderColor: borderColor,
+                        backgroundColor: background,
+                        hintText: "Product Code",
+                        hintStyle: TextStyle(color: colorsecondary1),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        onTap: () {},
+                      ),
+                      SizedBox(height: 20),
                       Text(
                         TTexts.txtCompanyName,
                         style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
@@ -88,6 +121,39 @@ class RequestQuoteScreenView extends StatelessWidget {
                         onTap: () {},
                       ),
                       SizedBox(height: 20),
+                      Text(
+                        "Company Mail",
+                        style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                      ),
+                      TextInputField(
+                        height: 50,
+                        controller: controller.companyemailController,
+                        borderColor: borderColor,
+                        backgroundColor: background,
+                        hintText: "company mail",
+                        hintStyle: TextStyle(color: colorsecondary1),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        onTap: () {},
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Company Mobile",
+                        style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                      ),
+                      TextInputField(
+                        height: 50,
+                        controller: controller.companymobileController,
+                        borderColor: borderColor,
+                        backgroundColor: background,
+                        hintText: "company mobile",
+                        hintStyle: TextStyle(color: colorsecondary1),
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        onTap: () {},
+                      ),
+                      SizedBox(height: 20),
+
                       Text(
                         TTexts.txtContactName,
                         style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
@@ -125,85 +191,20 @@ class RequestQuoteScreenView extends StatelessWidget {
                         style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
                       ),
                       IntlPhoneField(
-                        controller: controller.phoneController,
-                        keyboardType: TextInputType.phone,
-                        cursorColor: Colors.black,
-                        autofocus: false,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          // LengthLimitingTextInputFormatter(10),
-                        ],
                         decoration: InputDecoration(
-                          hintText: "type your number...",
-                          hintStyle: TextStyle(
-                            color: colorsecondary1,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 0),
-                          filled: true,
-                          fillColor: background,
-                          alignLabelWithHint: true,
-                          errorStyle: TextStyle(color: Colors.grey.shade400),
+                         // labelText: 'Phone Number',
+                          labelStyle: TextStyle(color: Colors.grey),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: TColors.colorlightgrey,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: TColors.colorlightgrey,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: TColors.colorlightgrey,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: TColors.colorlightgrey,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(),
                           ),
                         ),
-                        style: AppTextStyles.grey14.copyWith(color: colorsecondary),
-                        initialCountryCode: "DE", // Set to Germany
+                        controller: controller.phoneController,
+                        initialCountryCode: 'DE',
                         onChanged: (phone) {
                           print(phone.completeNumber);
                         },
-                        onCountryChanged: (selectedCountry) {
-                          controller.countryCode.value = selectedCountry.dialCode ?? "49";
-                        },
-                        showDropdownIcon: true,
-                        showCountryFlag: true,
-                        dropdownIcon: Icon(Icons.face_3, color: Colors.transparent, size: 12),
-                        dropdownTextStyle: TextStyle(
-                          color: colorsecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        invalidNumberMessage: "",
-                        disableLengthCheck: true,
                       ),
-                      // TextInputField(
-                      //   height: 50,
-                      //   controller: controller.phoneController,
-                      //   borderColor: borderColor,
-                      //   backgroundColor: background,
-                      //   hintStyle: TextStyle(color: c),
-                      //   hintText: TTexts.txttypeyourphone,
-                      //   enabledBorder: InputBorder.none,
-                      //   focusedBorder: InputBorder.none,
-                      //   inputFormatters: [
-                      //     FilteringTextInputFormatter.digitsOnly,
-                      //     LengthLimitingTextInputFormatter(10),
-                      //   ],
-                      //   onTap: () {},
-                      // ),
+
                       SizedBox(height: 20),
                       Text(
                         TTexts.txtSparePartName,

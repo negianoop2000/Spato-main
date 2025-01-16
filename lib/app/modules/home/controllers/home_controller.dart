@@ -32,7 +32,8 @@ class HomeController extends GetxController {
   var userName = ''.obs;
   var userEmail = ''.obs;
   var userImage = ''.obs;
-
+  var bannerImage = ''.obs;
+  var bannerContained = ''.obs;
   var options = <String>[].obs;
   var selectedOptions = <String>[].obs;
   var selectedHerstNr = <String>[].obs;
@@ -80,7 +81,6 @@ class HomeController extends GetxController {
     searchController.value.addListener(_onSearchChanged);
     productCategoriesApi();
     profileUserApi();
-    BannnerContentApi();
     getsupplierData();
   }
   void _onSearchChanged() {
@@ -105,14 +105,12 @@ class HomeController extends GetxController {
       if (response != null ) {
         var userData = response['success'];
         userName.value = response['userName'] ?? 'No Name';
-     //   userAddress.value = userData['address'] ?? 'No Address';
         userImage.value = userData['profile_picture'] ?? 'profile_pitcher';
         update();
         isLoading(false);
 
       } else {
         isLoading(false);
-    //    Get.snackbar('Error', "An error update");
         update();
       }
     } catch (e) {
@@ -129,12 +127,25 @@ class HomeController extends GetxController {
     //print("Selected Category: $selectedCategory");
     isLoading(true);
     try {
-      var response = await ApiService().getAllLatestProductsHomeApi();
+
+      var responseforuserid = await ApiService().fetchuserid(globalShopId ?? "");
+
+      print(responseforuserid);
+
+      String userid = responseforuserid['b2b_id']?? responseforuserid['userId'].toString();
+      var response = await ApiService().getAllLatestProductsHomeApi(userid);
       if (response != null) {
         var allProduct = response['latestProduct'] as List;
 
+
+
         allProductList.clear();
         allProductList.addAll(allProduct.map((data) => ProductList.fromJson(data)).toList());
+
+        var bannerData = response['bannner'] as List;
+        var banner = bannerData[0];
+        bannerImage.value = banner['banner_image'] ?? '';
+        bannerContained.value = banner['banner_content'] ?? '';
 
         for (var product in allProductList) {
           if (product.bild1 != null) {
@@ -303,22 +314,6 @@ class HomeController extends GetxController {
       return parsedPrice != null ? parsedPrice.toStringAsFixed(2) : '0.00';
     } catch (e) {
       return '0.00';
-    }
-  }
-
-  var bannerImage = ''.obs;
-  var bannerContained = ''.obs;
-  Future<void> BannnerContentApi() async {
-    isLoading(true);
-    try {
-      var response = await ApiService().BannnerContent();
-      if (response['success'] != null && response['success'] is List && response['success'].isNotEmpty) {
-        var bannerData = response['success'][0];
-        bannerImage.value = bannerData['banner_image'] ?? '';
-        bannerContained.value = bannerData['banner_content'] ?? '';
-      }
-    } finally {
-      isLoading(false);
     }
   }
 
