@@ -47,22 +47,14 @@ class IntroVCView extends StatelessWidget {
             //   ),
             // ),
             SizedBox(height: 100),
-            Padding(
-              padding: const EdgeInsets.only(left: 20,right: 80),
-              child: Text(
-                TTexts.txtIntrostartJaurney,
-                style: AppTextStyles.textHeadingTitle.copyWith(color: colorsecondary),textAlign: TextAlign.left,
-              ),
+            Text(
+              TTexts.txtIntrostartJaurney,
+              style: AppTextStyles.textHeadingTitle.copyWith(color: colorsecondary),textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Align(alignment: Alignment.bottomLeft,
-                child: Text(
-                  TTexts.txtIntrofindall,
-                  style: AppTextStyles.textTitle.copyWith(color: TColors.colorlightgrey,fontSize: 15),textAlign: TextAlign.left,
-                ),
-              ),
+            Text(
+              TTexts.txtIntrofindall,
+              style: AppTextStyles.textTitle.copyWith(color: colorsecondary,fontSize: 15),textAlign: TextAlign.center,
             ),
             Spacer(),
             InkWell(

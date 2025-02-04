@@ -26,7 +26,7 @@ class TTexts {
 
   // -- Intro Texts
   static const String txtIntrostartJaurney = "Start Journey With SPATO";
-  static const String txtIntrofindall = "Find all the pool equipment in one place";
+  static const String txtIntrofindall = "Your Mobile Commerce APP";
   static const String txtIntroStart = "Start";
 
 

@@ -199,7 +199,7 @@ class SignUpInfoView extends StatelessWidget {
                           ),
                         ),
                         controller: controller.phoneNumberController,
-                        initialCountryCode: 'IN',
+                        initialCountryCode: 'DE',
                         onChanged: (phone) {
                           print(phone.completeNumber);
                         },
