@@ -1020,7 +1020,7 @@ class DetailScreenView extends StatelessWidget {
                                       child:  Center(
                                         child: product.imageUrl != null && product.imageUrl!.isNotEmpty
                                             ? CachedNetworkImage(
-                                          imageUrl: product.imageUrl!,
+                                          imageUrl: product.image!,
                                           placeholder: (context, url) => const Center(
                                             child: Padding(
                                               padding: EdgeInsets.all(20.0),
@@ -1369,7 +1369,7 @@ class DetailScreenView extends StatelessWidget {
                                                     child: Center(
                                                       child: product.imageUrl != null && product.imageUrl!.isNotEmpty
                                                           ? CachedNetworkImage(
-                                                        imageUrl: product.imageUrl!,
+                                                        imageUrl: product.image!,
                                                         placeholder: (context, url) => const Center(
                                                           child: Padding(
                                                             padding: EdgeInsets.all(20.0),

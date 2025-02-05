@@ -52,6 +52,13 @@ class AllcategoryController extends GetxController {
   Future<void> GetFilteredCategory(String mainCategory, List<int> selectedSupplierIndexes) async {
     try {
       isLoading(true);
+
+      final prefs = await SharedPreferences.getInstance();
+      List<String> selectedOptions = prefs.getStringList('selectedOptions') ?? [];
+      List<String> selectedHerstNr = prefs.getStringList('selectedHerstNr') ?? [];
+
+      // Convert selectedHerstNr to List<int> if necessary
+      List<int> selectedSupplierIndexes = selectedHerstNr.map((e) => int.tryParse(e) ?? 0).toList();
       var response = await ApiService().getDynamicFilterCategory(mainCategory, selectedSupplierIndexes);
 
       if (response != null) {
@@ -85,7 +92,7 @@ class AllcategoryController extends GetxController {
 
       print(responseforuserid);
 
-      String userid = responseforuserid['b2b_id'];
+      String userid = responseforuserid['b2b_id'] ?? "";
       var response = await ApiService().productCategories(category,userid);
       if (response != null) {
         var allProduct = response['allProduct'] as List<dynamic>? ?? [];

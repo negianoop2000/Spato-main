@@ -133,11 +133,11 @@ class LoginController extends GetxController {
         if (response['status'] == 1 && response['success'] == "Login Successfull") {
           Get.snackbar('Success', response['success'], duration: const Duration(seconds: 1));
 
-          if (shopId.isNotEmpty) {
+         // if (shopId.isNotEmpty) {
             globalShopId = shopId;
             final prefs = await SharedPreferences.getInstance();
             await prefs.setString('remembered_shopid', globalShopId!);
-          }
+         // }
 
           await setPreferencesAndNavigate(response);
           print("Navigating to BottomNavigationTap...");

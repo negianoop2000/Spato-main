@@ -178,7 +178,7 @@ class MyCartView extends StatelessWidget {
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(15),
                                               child: CachedNetworkImage(
-                                                imageUrl: product.imageUrl,
+                                                imageUrl: product.image,
                                                 placeholder: (context, url) => const Center(
                                                   child: Padding(
                                                     padding: EdgeInsets.all(20.0),

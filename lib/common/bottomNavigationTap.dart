@@ -105,7 +105,9 @@ class _BottomNavigationTapState extends State<BottomNavigationTap> {
 
   @override
   Widget build(BuildContext context) {
-    final NotificationListScreenController controller = Get.put(NotificationListScreenController());
+    final MyCartController cartcontroller = Get.put(MyCartController());
+
+    final NotificationListScreenController notificationcontroller = Get.put(NotificationListScreenController());
 
     Color background = Theme.of(context).brightness == Brightness.light ? TColors.white : TColors.black;
     Color borderColor = Theme.of(context).brightness == Brightness.light ? TColors.colorprimaryLight : TColors.darkerGrey;
@@ -151,17 +153,27 @@ class _BottomNavigationTapState extends State<BottomNavigationTap> {
                     label: '',
                   ),
                   BottomNavigationBarItem(
-                    icon: Image.asset(
+                    icon:Obx(() {
+                     int Count = cartcontroller.count.value;
+                       return badges.Badge(
+                      showBadge: Count > 0,
+                   badgeContent: Text(
+                   Count.toString(),
+                     style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    position: badges.BadgePosition.topEnd(top: -10, end: -12),
+                  child: Image.asset(
                       TImages.imgIconCartUnselect,
                       color: _selectedIndex == 1 ? iconselected : iconUnselected,
                       width: 24,
                       height: 24,
-                    ),
+                    ));
+                    }),
                     label: '',
                   ),
                   BottomNavigationBarItem(
                     icon: Obx(() {
-                      int notificationCount = controller.unreadNotificationCount.value;
+                      int notificationCount = notificationcontroller.unreadNotificationCount.value;
                       return badges.Badge(
                         showBadge: notificationCount > 0,
                         badgeContent: Text(

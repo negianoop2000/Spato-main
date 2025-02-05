@@ -7,7 +7,7 @@ import 'package:spato_mobile_app/utils/constants/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyCartController extends GetxController {
-  final count = 1.obs;
+  final count = 0.obs;
   var isLoading = false.obs;
   var couponCodeController = TextEditingController().obs;
   var userName = ''.obs;
@@ -23,6 +23,15 @@ class MyCartController extends GetxController {
   double discountAmount = 0.0;
   var isCartEmpty = false.obs;
 
+  void calculateTotalCount() {
+    int totalItems = 0;
+    for (var product in productsClaim) {
+      totalItems += product.count; // Summing all product counts
+    }
+    count.value = totalItems; // Updating the observable count variable
+  }
+
+
   // Helper function to parse price strings
   double parsePrice(String price) {
     try {
@@ -37,7 +46,8 @@ class MyCartController extends GetxController {
   void incrementCount(int index) {
     productsClaim[index].count++;
     calculateSubtotal();
-    productsClaim.refresh();  // Refresh the list to notify listeners
+    calculateTotalCount(); // Update count when incrementing
+    productsClaim.refresh();
   }
 
   void decrementCount(int index) {
@@ -45,7 +55,8 @@ class MyCartController extends GetxController {
       productsClaim[index].count--;
     }
     calculateSubtotal();
-    productsClaim.refresh();  // Refresh the list to notify listeners
+    calculateTotalCount(); // Update count when decrementing
+    productsClaim.refresh();
   }
 
   void calculateSubtotal() {
@@ -137,6 +148,8 @@ class MyCartController extends GetxController {
           }
 
           calculateSubtotal();
+          calculateTotalCount(); // Update the count variable
+
           isCartEmpty.value = productsClaim.isEmpty;
         } else {
           isCartEmpty.value = true;
@@ -183,6 +196,7 @@ class MyCartController extends GetxController {
         productsClaim.removeWhere((item) => item.id == productId);
 
         calculateSubtotal();
+        calculateTotalCount();
         productsClaim.refresh();
         await getCartItemsApi();
         Get.snackbar('Success', response['message'], duration: Duration(seconds: 1));
