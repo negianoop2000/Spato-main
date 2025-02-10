@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:spato_mobile_app/Custom%20Widget/country_selector.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:spato_mobile_app/app/data/country_list.dart';
 import 'package:spato_mobile_app/common/common_app_buttons.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
@@ -14,7 +14,6 @@ import 'package:spato_mobile_app/utils/constants/common_input_fields.dart';
 import 'package:spato_mobile_app/utils/constants/image_strings.dart';
 import 'package:spato_mobile_app/utils/constants/loader.dart';
 import 'package:spato_mobile_app/utils/constants/text_strings.dart';
-import 'package:spato_mobile_app/utils/helpers/countrypic/intl_phone_field.dart';
 
 import '../controllers/editProfile_controller.dart';
 class editProfileView extends StatelessWidget {

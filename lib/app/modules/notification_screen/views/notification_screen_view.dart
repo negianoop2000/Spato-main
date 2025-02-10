@@ -97,107 +97,107 @@ class NotificationScreenView extends GetView<NotificationScreenController> {
                     inactiveThumbColor: textColor,
                     hoverColor: Colors.transparent,
                     onChanged: (newValue) {
-                      controller.toggleNotificationAll(newValue);
+                      controller.toggleNotificationAll();
                     },
                   ),
                 ),
               )),
-              SizedBox(height: 20),
-              Obx(() => Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: background,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: borderColor,
-                  ),
-                ),
-                child: ListTile(
-                  leading: Text(
-                    'Promotions',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: textColor,
-                    ),
-                  ),
-                  trailing: Switch(
-                    value: controller.isNotificationEnabledPromotions.value,
-                    activeTrackColor: trackColor,
-                    inactiveTrackColor: trackColor,
-                    activeColor: textColor,
-                    inactiveThumbColor: textColor,
-                    hoverColor: Colors.transparent,
-                    onChanged: (newValue) {
-                      controller.toggleNotificationPromotions(newValue);
-                    },
-                  ),
-                ),
-              )),
-              SizedBox(height: 20),
-              Obx(() => Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: background,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: borderColor,
-                  ),
-                ),
-                child: ListTile(
-                  leading: Text(
-                    'Orders',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: textColor,
-                    ),
-                  ),
-                  trailing: Switch(
-                    value: controller.isNotificationEnabledOrders.value,
-                    activeTrackColor: trackColor,
-                    inactiveTrackColor: trackColor,
-                    activeColor: textColor,
-                    inactiveThumbColor: textColor,
-                    hoverColor: Colors.transparent,
-                    onChanged: (newValue) {
-                      controller.toggleNotificationOrders(newValue);
-                    },
-                  ),
-                ),
-              )),
-              SizedBox(height: 20),
-              Obx(() => Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: background,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: borderColor,
-                  ),
-                ),
-                child: ListTile(
-                  leading: Text(
-                    'Alerts & Reminders',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: textColor,
-                    ),
-                  ),
-                  trailing: Switch(
-                    value: controller.isNotificationEnabledAlerts.value,
-                    activeTrackColor: trackColor,
-                    inactiveTrackColor: trackColor,
-                    activeColor: textColor,
-                    inactiveThumbColor: textColor,
-                    hoverColor: Colors.transparent,
-                    onChanged: (newValue) {
-                      controller.toggleNotificationAlerts(newValue);
-                    },
-                  ),
-                ),
-              )),
+              // SizedBox(height: 20),
+              // Obx(() => Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     color: background,
+              //     borderRadius: BorderRadius.circular(15),
+              //     border: Border.all(
+              //       color: borderColor,
+              //     ),
+              //   ),
+              //   child: ListTile(
+              //     leading: Text(
+              //       'Promotions',
+              //       style: TextStyle(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: textColor,
+              //       ),
+              //     ),
+              //     trailing: Switch(
+              //       value: controller.isNotificationEnabledPromotions.value,
+              //       activeTrackColor: trackColor,
+              //       inactiveTrackColor: trackColor,
+              //       activeColor: textColor,
+              //       inactiveThumbColor: textColor,
+              //       hoverColor: Colors.transparent,
+              //       onChanged: (newValue) {
+              //         controller.toggleNotificationPromotions(newValue);
+              //       },
+              //     ),
+              //   ),
+              // )),
+              // SizedBox(height: 20),
+              // Obx(() => Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     color: background,
+              //     borderRadius: BorderRadius.circular(15),
+              //     border: Border.all(
+              //       color: borderColor,
+              //     ),
+              //   ),
+              //   child: ListTile(
+              //     leading: Text(
+              //       'Orders',
+              //       style: TextStyle(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: textColor,
+              //       ),
+              //     ),
+              //     trailing: Switch(
+              //       value: controller.isNotificationEnabledOrders.value,
+              //       activeTrackColor: trackColor,
+              //       inactiveTrackColor: trackColor,
+              //       activeColor: textColor,
+              //       inactiveThumbColor: textColor,
+              //       hoverColor: Colors.transparent,
+              //       onChanged: (newValue) {
+              //         controller.toggleNotificationOrders(newValue);
+              //       },
+              //     ),
+              //   ),
+              // )),
+              // SizedBox(height: 20),
+              // Obx(() => Container(
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     color: background,
+              //     borderRadius: BorderRadius.circular(15),
+              //     border: Border.all(
+              //       color: borderColor,
+              //     ),
+              //   ),
+              //   child: ListTile(
+              //     leading: Text(
+              //       'Alerts & Reminders',
+              //       style: TextStyle(
+              //         fontSize: 14,
+              //         fontWeight: FontWeight.w500,
+              //         color: textColor,
+              //       ),
+              //     ),
+              //     trailing: Switch(
+              //       value: controller.isNotificationEnabledAlerts.value,
+              //       activeTrackColor: trackColor,
+              //       inactiveTrackColor: trackColor,
+              //       activeColor: textColor,
+              //       inactiveThumbColor: textColor,
+              //       hoverColor: Colors.transparent,
+              //       onChanged: (newValue) {
+              //         controller.toggleNotificationAlerts(newValue);
+              //       },
+              //     ),
+              //   ),
+              // )),
             ],
           ),
         ),

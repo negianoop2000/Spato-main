@@ -299,16 +299,18 @@ class MyCartView extends StatelessWidget {
                         color: TColors.colorprimaryLight,
                         onPressed: () {
                           if (!controller.isCartEmpty.value){
-                            controller.couponCode(
-                              controller.couponCodeController.value.text,
-                              controller.orderTotal.value,
-                            );
+                            Get.toNamed(Routes.CHECKOUT_SHIPPING);
+                            controller.savePreferences();
                           }
                           else {
-                            Get.snackbar("Can't Checkout", "Please add Product in your cart", duration: const Duration(seconds: 1));
+                            Get.snackbar("Can't Checkout",
+                                "Please add Product in your cart",
+                                duration: const Duration(seconds: 1));
                           }
-                          },
-                        buttonText: "Apply Coupon",
+
+
+                        },
+                        buttonText: "Checkout",
                       ),
                       const SizedBox(height: 10),
                       GestureDetector( onTap: (){
@@ -354,18 +356,16 @@ class MyCartView extends StatelessWidget {
                         color: TColors.colorprimaryLight,
                         onPressed: () {
                           if (!controller.isCartEmpty.value){
-                            Get.toNamed(Routes.CHECKOUT_SHIPPING);
-                            controller.savePreferences();
+                            controller.couponCode(
+                              controller.couponCodeController.value.text,
+                              controller.orderTotal.value,
+                            );
                           }
                           else {
-                            Get.snackbar("Can't Checkout",
-                                "Please add Product in your cart",
-                                duration: const Duration(seconds: 1));
+                            Get.snackbar("Can't Checkout", "Please add Product in your cart", duration: const Duration(seconds: 1));
                           }
-
-
                         },
-                        buttonText: "Checkout",
+                        buttonText: "Apply Coupon",
                       ),
                     ],
                   ),

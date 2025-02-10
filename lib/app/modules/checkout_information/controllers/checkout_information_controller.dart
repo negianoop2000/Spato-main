@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
 
@@ -12,14 +12,16 @@ class CheckoutInformationController extends GetxController {
 
   final FocusNode countryFocusNode = FocusNode();
 
-  TextEditingController cityController = TextEditingController();
-  TextEditingController zipCodeController = TextEditingController();
-  TextEditingController countryController = TextEditingController();
-  TextEditingController emailControler = TextEditingController();
-  TextEditingController repeatUserNameController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController streetnameController = TextEditingController();
-  TextEditingController streetnumberController = TextEditingController();
+   TextEditingController cityController = TextEditingController();
+   TextEditingController zipCodeController = TextEditingController();
+   TextEditingController countryController = TextEditingController();
+  TextEditingController companynameController = TextEditingController();
+  TextEditingController companyemailController = TextEditingController();
+  TextEditingController companyphoneController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+
+
+  RxString usertype ="".obs;
 
   var isDropdownOpen = false.obs;
   RxString selectedCountry = "Germany".obs;
@@ -28,7 +30,8 @@ class CheckoutInformationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    profileUserApi();
+    getusertype();
+   // profileUserApi();
   }
 
   @override
@@ -36,37 +39,53 @@ class CheckoutInformationController extends GetxController {
     super.onReady();
   }
 
+  Future<void> getusertype() async {
+    final prefs = await SharedPreferences.getInstance();
 
-
-  Future<void> profileUserApi() async {
-    print("Fetching profile data");
-    try {
-      isLoading(true);
-      var response = await ApiService().profileUserExtraDetail();
-      print('Profile user response: $response');
-      if (response != null && response['success'] != null) {
-        var userData = response['success'];
-     //   cityController.text = userData['city'] ?? '';
-      //  zipCodeController.text = userData['zipCode'] ?? '';
-     //   countryController.text = userData['country'] ?? '';
-        emailControler.text = userData['email'] ?? '';
-      //  addressController.text = userData['address'] ?? '';
-        repeatUserNameController.text = userData['name'] ?? '';
-        phoneNumberController.text = userData['mobile'] ?? '';
-      } else {
-      //  Get.snackbar('Error', 'No Profile');
-      }
-    } catch (e) {
-      print('Error fetching profile data: $e');
-    //  Get.snackbar('Error', 'Error fetching profile data');
-    } finally {
-      isLoading(false);
-    }
+    usertype.value = prefs.getString('role')!;
+     print(usertype);
   }
+
+  // Future<void> profileUserApi() async {
+  //   print("Fetching profile data");
+  //   try {
+  //     isLoading(true);
+  //     var response = await ApiService().profileUserExtraDetail();
+  //     print('Profile user response: $response');
+  //     if (response != null && response['success'] != null) {
+  //       var userData = response['success'];
+  //    //   cityController.text = userData['city'] ?? '';
+  //     //  zipCodeController.text = userData['zipCode'] ?? '';
+  //    //   countryController.text = userData['country'] ?? '';
+  //       emailControler.text = userData['email'] ?? '';
+  //     //  addressController.text = userData['address'] ?? '';
+  //       repeatUserNameController.text = userData['name'] ?? '';
+  //       phoneNumberController.text = userData['mobile'] ?? '';
+  //     } else {
+  //     //  Get.snackbar('Error', 'No Profile');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching profile data: $e');
+  //   //  Get.snackbar('Error', 'Error fetching profile data');
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
 
   void validation() {
 
-    if (streetnameController.text.isEmpty) {
+
+    if(usertype.value=="b2b"){
+      if (companyemailController.text.isEmpty) {
+        Get.snackbar('Error', 'Please enter a address',duration: Duration(seconds: 1));
+      } else if (companyphoneController.text.isEmpty) {
+        Get.snackbar('Error', 'Please enter a address',duration: Duration(seconds: 1));
+      } else if (companyemailController.text.isEmpty) {
+        Get.snackbar('Error', 'Please enter a address',duration: Duration(seconds: 1));
+      }
+    }
+
+     if (addressController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter a address',duration: Duration(seconds: 1));
     } else if (cityController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter a city',duration: Duration(seconds: 1));
@@ -84,10 +103,10 @@ class CheckoutInformationController extends GetxController {
     try {
       isLoading(true);
       var response = await ApiService().saveTempAddress(
-          repeatUserNameController.text,
-          emailControler.text,
-          phoneNumberController.text,
-          streetnameController.text,
+          companynameController.text,
+          companyemailController.text,
+          companyphoneController.text,
+          addressController.text,
           cityController.text,
           zipCodeController.text,
           countryController.text
@@ -118,10 +137,10 @@ class CheckoutInformationController extends GetxController {
     cityController.dispose();
     zipCodeController.dispose();
     countryController.dispose();
-    emailControler.dispose();
-    repeatUserNameController.dispose();
-    phoneNumberController.dispose();
-    streetnameController.dispose();
+    companynameController.dispose();
+    companyphoneController.dispose();
+    companyemailController.dispose();
+    addressController.dispose();
     countryFocusNode.dispose();
     super.onClose();
   }

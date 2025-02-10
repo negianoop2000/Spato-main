@@ -8,6 +8,7 @@ import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
 
 import '../../../../utils/constants/colors.dart';
+import '../../order_summary/views/order_summary_view.dart';
 
 
 class CheckoutShippingController extends GetxController {
@@ -115,8 +116,10 @@ class CheckoutShippingController extends GetxController {
               productPrices: productPrices,
             );
 
-            // Show order summary dialog
-            showOrderSummaryDialog(context, cartitems);
+          //  showOrderSummaryDialog(context, cartitems);
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) =>  OrderSummaryView(cartitems)),
+            );
           }
 
         else {
@@ -155,131 +158,6 @@ class CheckoutShippingController extends GetxController {
     // Debugging: print saved data
     print("Saved Preferences: Subtotal: $subtotal, Tax: $tax, Order Total: $orderTotal");
     print("Product IDs: $productIds, Quantities: $productQuantities, Prices: $productPrices");
-  }
-
-
-  void showOrderSummaryDialog(BuildContext context, List<dynamic> cartItems) {
-    Color colorsecondary = Theme.of(context).brightness == Brightness.light
-        ? TColors.colorsecondaryLight
-        : TColors.colorsecondaryDark;
-
-    double totalPrice = 0.0;
-    for (var cartItem in cartItems) {
-      double itemFinalRate = double.tryParse(cartItem['final_rate'].toString()) ?? 0.0;
-      int quantity = int.tryParse(cartItem['quantity'].toString()) ?? 0;
-      totalPrice += itemFinalRate * quantity; // Include quantity in the calculation
-    }
-
-    showDialog(context: context, builder: (context) {
-        return AlertDialog(
-          title: Text('Order Summary'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: cartItems.length,
-                    itemBuilder: (context, index) {
-                      final cartItem = cartItems[index];
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSummaryItem(
-                            title: "Product Name",
-                            value: cartItem['product_name'] ?? '',
-                            color: colorsecondary,
-                          ),
-                          _buildSummaryItem(
-                            title: "Price (excl. Tax)",
-                            value: "€${cartItem['Preis_zzgl_MwSt'] ?? '0'}",
-                            color: colorsecondary,
-                          ),
-                          _buildSummaryItem(
-                            title: "Quantity",
-                            value: "${cartItem['quantity'] ?? '0'}",
-                            color: colorsecondary,
-                          ),
-                          _buildSummaryItem(
-                            title: "Discount %",
-                            value: "${cartItem['discount_percentage'] ?? '0'}%",
-                            color: colorsecondary,
-                          ),
-                          _buildSummaryItem(
-                            title: "Final Rate",
-                            value: "€${cartItem['final_rate'] ?? '0'}",
-                            color: colorsecondary,
-                          ),
-                          Divider(color: Colors.grey),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                Divider(color: Colors.black),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    "Total Price: €${totalPrice.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: colorsecondary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                addOrderApi(); // Proceed with the order
-              },
-              child: Text('Confirm'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
-  Widget _buildSummaryItem({required String title, required String value, required Color color, bool isTotal = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: isTotal ? 16 : 14,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: color,
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: isTotal ? 16 : 14,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
 

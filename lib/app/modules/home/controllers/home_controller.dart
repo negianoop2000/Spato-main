@@ -142,10 +142,18 @@ class HomeController extends GetxController {
         allProductList.clear();
         allProductList.addAll(allProduct.map((data) => ProductList.fromJson(data)).toList());
 
-        var bannerData = response['bannner'] as List;
-        var banner = bannerData[0];
-        bannerImage.value = banner['banner_image'] ?? '';
-        bannerContained.value = banner['banner_content'] ?? '';
+        var bannerData = response['bannner'];
+
+        if (bannerData is List && bannerData.isNotEmpty) {
+          var banner = bannerData[0];
+          bannerImage.value = banner['banner_image'] ?? '';
+          bannerContained.value = banner['banner_content'] ?? '';
+        } else {
+          // Set default values if the banner data is missing
+          bannerImage.value = '';
+          bannerContained.value = '';
+        }
+
 
         for (var product in allProductList) {
           if (product.bild1 != null) {

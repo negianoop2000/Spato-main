@@ -126,6 +126,11 @@ class LoginController extends GetxController {
         var response = await ApiService().loginApi(email, password, shopId: shopId);
         print('response-----$response');
 
+        if(response['error']!= null){
+          Get.snackbar('error', response['error'], duration: const Duration(seconds: 2));
+
+        }
+
         if(response['show_otp_input']!=null){
           otpfieldvisible = response['show_otp_input'];
         }

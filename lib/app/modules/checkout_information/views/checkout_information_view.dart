@@ -72,167 +72,78 @@ class CheckoutInformationView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Name",
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5),
-                                TextInputField(
-                                  height: 50,
-                                  controller: controller.repeatUserNameController,
-                                  borderColor: borderColor,
-                                  backgroundColor: background,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  hintText: TTexts.txttypefirstname,
-
-                                  onTap: () {
-
-                                  },
-
-                                ),
-                                const SizedBox(height: 15,),
-                                Text(
-                                  "Phone",
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5),
+                                // Text(
+                                //   "Name",
+                                //   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                                // ),
+                                // const SizedBox(height: 5),
                                 // TextInputField(
                                 //   height: 50,
-                                //   controller: controller.phoneNumberController,
+                                //   controller: controller.repeatUserNameController,
                                 //   borderColor: borderColor,
                                 //   backgroundColor: background,
                                 //   focusedBorder: InputBorder.none,
                                 //   enabledBorder: InputBorder.none,
-                                //   hintText: TTexts.txttypeyournumber,
+                                //   hintText: TTexts.txttypefirstname,
+                                //
                                 //   onTap: () {
                                 //
                                 //   },
                                 //
                                 // ),
-                                IntlPhoneField(
-                                  decoration: const InputDecoration(
-                                    labelText: 'Phone Number',
-                                    labelStyle: TextStyle(color: Colors.grey),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                  ),
-                                  controller: controller.phoneNumberController,
-                                  initialCountryCode: 'DE',
-                                  onChanged: (phone) {
-                                    print(phone.completeNumber);
-                                  },
-                                ),
+                                // const SizedBox(height: 15,),
+                                // Text(
+                                //   "Phone",
+                                //   style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                                // ),
+                                // const SizedBox(height: 5),
+                                // IntlPhoneField(
+                                //   decoration: const InputDecoration(
+                                //     labelText: 'Phone Number',
+                                //     labelStyle: TextStyle(color: Colors.grey),
+                                //     border: OutlineInputBorder(
+                                //       borderSide: BorderSide(),
+                                //     ),
+                                //   ),
+                                //   controller: controller.phoneNumberController,
+                                //   initialCountryCode: 'DE',
+                                //   onChanged: (phone) {
+                                //     print(phone.completeNumber);
+                                //   },
+                                // ),
 
                                // SizedBox(height: 15,),
-                                Text(
-                                  "Email",
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5),
-                                TextInputField(
-                                  height: 50,
-                                  controller: controller.emailControler,
-                                  borderColor: borderColor,
-                                  backgroundColor: background,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  hintText: TTexts.txttypeyouremail,
-                                  onTap: () {
+                               //  Text(
+                               //    "Email",
+                               //    style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+                               //  ),
+                               //  const SizedBox(height: 5),
+                               //  TextInputField(
+                               //    height: 50,
+                               //    controller: controller.emailControler,
+                               //    borderColor: borderColor,
+                               //    backgroundColor: background,
+                               //    focusedBorder: InputBorder.none,
+                               //    enabledBorder: InputBorder.none,
+                               //    hintText: TTexts.txttypeyouremail,
+                               //    onTap: () {
+                               //
+                               //    },
+                               //
+                               //  ),
+                               //
+                               //  const SizedBox(height: 15,),
 
-                                  },
+                                if (controller.usertype.value == "b2b") ...[
+                                  _buildInputField("Company Name", controller.companynameController, "Enter Company Name",colorsecondary,background,borderColor),
+                                  _buildInputField("Company Phone", controller.companyphoneController, "Enter Company Phone",colorsecondary,background,borderColor, isNumber: true),
+                                  _buildInputField("Company Email", controller.companyemailController, "Enter Company Email",colorsecondary,background,borderColor),
+                                ],
 
-                                ),
+                                _buildInputField("Address", controller.addressController, "Address",colorsecondary,background,borderColor),
+                                _buildInputField(TTexts.txtPostalCode, controller.zipCodeController, TTexts.txttypeyourpostalcode,colorsecondary,background,borderColor,isNumber: true),
+                                _buildInputField(TTexts.txtCity, controller.cityController, TTexts.txttypeyourcity,colorsecondary,background,borderColor),
 
-                                const SizedBox(height: 15,),
-                                Text(
-                                  "Street Name",
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5,),
-                                TextInputField(
-                                  height: 50,
-                                  borderColor: borderColor,
-                                  backgroundColor: background,
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  controller: controller.streetnameController,
-                                  hintText: TTexts.txtenterstreetname,
-                                  onTap: () {controller.isDropdownOpen.value = false;},
-                                ),
-
-
-                                const SizedBox(height:15),
-                                // TextInputField(
-                                //   height: 50,
-                                //   controller: controller.addressController,
-                                //   borderColor: borderColor,
-                                //   backgroundColor: background,
-                                //   focusedBorder: InputBorder.none,
-                                //   enabledBorder: InputBorder.none,
-                                //   hintText: TTexts.txttypeaddress,
-                                //   onTap: () {
-                                //     },
-                                //
-                                // ),
-                                Text(
-                                  "Street Number",
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5,),
-                                TextInputField(
-                                  height: 50,
-                                  borderColor: borderColor,
-                                  backgroundColor: background,
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  controller: controller.streetnumberController,
-                                  hintText: TTexts.txtenterstreetnumber,
-                                  onTap: () {controller.isDropdownOpen.value = false;},
-                                ),
-                                const SizedBox(height: 15,),
-                                Text(
-                                  TTexts.txtPostalCode,
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5),
-                                TextInputField(
-                                  height: 50,
-                                  controller: controller.zipCodeController,
-                                  borderColor: borderColor,
-                                  backgroundColor: background,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  keyboardType: const TextInputType.numberWithOptions(),
-
-                                  hintText:  TTexts.txttypeyourpostalcode,
-                                  onTap: () {
-
-                                  },
-
-                                ),
-
-                                const SizedBox(height: 15,),
-                                Text(
-                                  TTexts.txtCity,
-                                  style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
-                                ),
-                                const SizedBox(height: 5),
-                                TextInputField(
-                                  height: 50,
-                                  controller: controller.cityController,
-                                  borderColor: borderColor,
-                                  backgroundColor: background,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-
-                                  hintText: TTexts.txttypeyourcity,
-                                  onTap: () {
-
-                                  },
-
-                                ),
                                 const SizedBox(height: 15,),
                                 Text(
                                   TTexts.txtcountry,
@@ -331,4 +242,31 @@ class CheckoutInformationView extends StatelessWidget {
               ),
             )));
   }
+
+
+  Widget _buildInputField(String title, TextEditingController controller, String hintText,  Color colorsecondary,Color background, Color borderColor,{bool isNumber = false} ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppTextStyles.textFieldTitle.copyWith(color: colorsecondary),
+        ),
+        const SizedBox(height: 5),
+        TextInputField(
+          height: 50,
+          controller: controller,
+          borderColor: borderColor,
+          backgroundColor: background,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          hintText: hintText,
+          keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+          onTap: () {},
+        ),
+        const SizedBox(height: 15),
+      ],
+    );
+  }
+
 }
