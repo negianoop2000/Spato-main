@@ -87,25 +87,23 @@ class ProfileScreenView extends StatelessWidget {
                               color: TColors.colorlightgrey,
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: ClipOval(
-                              child: Obx(
-                                () => CachedNetworkImage(
-                                  imageUrl:
-                                      "$fullImageUrl${controller.userImage.value}",
+                          child: ClipOval(
+                            child: Obx(
+                                  () {
+                                String imageUrl = controller.userImage.value.isNotEmpty
+                                    ? "$fullImageUrl${controller.userImage.value}"
+                                    : "";
+                                return CachedNetworkImage(
+                                  imageUrl: imageUrl,
                                   placeholder: (context, url) => const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(20.0),
-                                      child: CircularProgressIndicator(),
-                                    ),
+                                    child: CircularProgressIndicator(),
                                   ),
-                                  errorWidget: (context, url, error) => Center(
-                                      child: Image.asset(
-                                          "assets/images/profile_dummy.png")),
+                                  errorWidget: (context, url, error) => controller.userImage.value.isEmpty
+                                      ? const SizedBox()
+                                      : Center(child: Image.asset("assets/images/profile_dummy.png")),
                                   fit: BoxFit.cover,
-                                ),
-                              ),
+                                );
+                              },
                             ),
                           ),
                         ),
