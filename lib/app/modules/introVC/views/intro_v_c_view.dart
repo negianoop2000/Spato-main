@@ -17,8 +17,8 @@ class IntroVCView extends StatelessWidget {
         ? TColors.colorsecondaryLight
         : TColors.colorsecondaryDark;
     String imagePath = Theme.of(context).brightness == Brightness.light
-        ? "assets/logos/SPATO-TextLogo-lifgt.png"
-        : "assets/logos/SPATO-TextLogo-dark.png";
+        ? "assets/logos/spato_logo_light.png"
+        : "assets/logos/spato_logo_dark.png";
     String startImage = Theme.of(context).brightness == Brightness.light
         ? 'assets/images/start_container_lightMode.png'
         : 'assets/images/start_container.png';
@@ -37,7 +37,9 @@ class IntroVCView extends StatelessWidget {
           children: [
             SizedBox(height: 50),
             Center(
-              child:Image.asset(imagePath),
+              child:Image.asset(imagePath,
+              height: 50,
+              width: 200,),
             ),
             // SizedBox(height: 20),
             // Center(

@@ -15,12 +15,15 @@ class SplashView extends StatelessWidget {
         ? TColors.containerFillDark
         : TColors.black;
     String imagePath = Theme.of(context).brightness == Brightness.light
-        ? 'assets/images/Splash Screen_light.png'
-        : 'assets/images/Splash Screen_dark.png';
+        ? 'assets/logos/spato_logo_light.png'
+        : 'assets/logos/spato_logo_dark.png';
     return Scaffold(
       backgroundColor: background,
-      body: Center(
-        child: Image.asset(imagePath),
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Center(
+          child: Image.asset(imagePath),
+        ),
       ),
     );
   }

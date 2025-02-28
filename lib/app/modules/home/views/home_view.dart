@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
-import 'package:spato_mobile_app/app/data/model/category_productList.dart';
-import 'package:spato_mobile_app/app/data/model/products_list.dart';
 import 'package:spato_mobile_app/app/routes/app_pages.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
 import 'package:spato_mobile_app/utils/constants/app_text_styles.dart';
@@ -27,7 +25,7 @@ class HomeView extends StatelessWidget {
         : TColors.colorsecondaryDark;
     Color searchicon= Theme.of(context).brightness == Brightness.light
         ? TColors.colorsecondaryLight
-        : Color(0xff4c5561);
+        : const Color(0xff4c5561);
     Color textFildBorder = Theme.of(context).brightness == Brightness.light
         ? TColors.colorlightunselectCheckbox
         : TColors.contanerBorderDark;
@@ -73,7 +71,7 @@ class HomeView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: 50,
                               width: 50,
@@ -90,14 +88,14 @@ class HomeView extends StatelessWidget {
                                   child: Obx(
                                         () => CachedNetworkImage(
                                       imageUrl: "$fullImageUrl${controller.userImage.value}",
-                                      placeholder: (context, url) => Center(
+                                      placeholder: (context, url) => const Center(
                                         child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
+                                          padding: EdgeInsets.all(20.0),
                                           child: CircularProgressIndicator(),
                                         ),
                                       ),
-                                      errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/profile_dummy.png")),
-                                      fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) => Container(),
+                                          fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
@@ -105,7 +103,7 @@ class HomeView extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Obx(() => TextInputField(
                           height: 50,
                           controller: controller.searchController.value,
@@ -120,12 +118,12 @@ class HomeView extends StatelessWidget {
                         Obx(() => Visibility(
                           visible: controller.searchController.value.text.isNotEmpty,
                           child: controller.isLoading.value
-                              ? SizedBox(height: 1,)
+                              ? const SizedBox(height: 1,)
 
                               : controller.searchResults.isEmpty
-                              ? Center(
+                              ? const Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Text('No results found'),
                             ),
                           )
@@ -171,7 +169,7 @@ class HomeView extends StatelessWidget {
                                                         ),
                               ),
                         )),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Obx(() {
                           if (controller.bannerImage.value.isNotEmpty) {
                             return Container(
@@ -245,15 +243,15 @@ class HomeView extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: const BorderRadius.only(
                                           topRight: Radius.circular(8),
                                           bottomRight: Radius.circular(8),
                                         ),
                                         child: CachedNetworkImage(
                                           imageUrl: "${fullImageUrl}mobile_app/banner_image/${controller.bannerImage.value}",
-                                          placeholder: (context, url) => Center(
+                                          placeholder: (context, url) => const Center(
                                             child: Padding(
-                                              padding: const EdgeInsets.all(20.0),
+                                              padding: EdgeInsets.all(20.0),
                                               child: CircularProgressIndicator(),
                                             ),
                                           ),
@@ -269,13 +267,13 @@ class HomeView extends StatelessWidget {
                               ),
                             );
                           } else {
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
                         }),
 
 
 
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Column(
                           children: [
                             Row(
@@ -306,7 +304,7 @@ class HomeView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                               SizedBox(width: 50,),
+                               const SizedBox(width: 50,),
                                 InkWell(
                                   onTap: () {
                                     controller.isSelectedFiltered.value = !controller.isSelectedFiltered.value;
@@ -342,13 +340,13 @@ class HomeView extends StatelessWidget {
                               print("Rebuilding widget. isSelectedFiltered: ${controller.isSelectedFiltered.value}");
                               return controller.isSelectedFiltered.value
                                   ? Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                 //  color: TColors.colorprimaryLight.withOpacity(.10),
                                 //  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
                                   children: [
-                                    SizedBox(height:10),
+                                    const SizedBox(height:10),
                                     Container(
                                       height: 200,
                                       decoration: BoxDecoration(
@@ -364,7 +362,7 @@ class HomeView extends StatelessWidget {
                                               return Obx(() {
                                                 final isSelected = controller.selectedOptions.contains(option);
                                                 return ListTile(
-                                                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 1.0),
+                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 1.0),
                                                   leading: Container(
                                                     width: 24,
                                                     height: 24,
@@ -398,7 +396,7 @@ class HomeView extends StatelessWidget {
                                         );
                                       }),
                                     ),
-                                    SizedBox(height:10),
+                                    const SizedBox(height:10),
                                     CommonAppButton(
                                       width: double.infinity,
                                       color: TColors.colorprimaryLight,
@@ -411,7 +409,7 @@ class HomeView extends StatelessWidget {
                                   ],
                                 ),
                               )
-                                  : SizedBox.shrink();
+                                  : const SizedBox.shrink();
                             }),
                           ],
                         ),
@@ -420,8 +418,8 @@ class HomeView extends StatelessWidget {
                             height: height*0.4,
                             child:Obx(() {
                       if (controller.products.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 20,left: 40,right: 40),
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 20,left: 40,right: 40),
                           child: Text(
                             '',
                             style: TextStyle(fontSize: 16, color: Colors.black54),textAlign: TextAlign.center,
@@ -432,7 +430,7 @@ class HomeView extends StatelessWidget {
                           GridView.builder(
                           shrinkWrap: true,
                           //physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
@@ -442,13 +440,12 @@ class HomeView extends StatelessWidget {
                           itemBuilder: (context, index) {
                             if (index >= controller.products.length) {
                               // Check if index is valid
-                              return Center(child: Text('Invalid item index'));
+                              return const Center(child: Text('Invalid item index'));
                             }
 
                             final product = controller.products[index];
-                            String fullImageUrl = ApiService.imageUrl;
-                            String imageUrl = "$fullImageUrl${product.bild1 ?? ''}";
-                          //  controller.get_image(product.bild1 ?? '');
+                           // String fullImageUrl = ApiService.imageUrl;
+                           // String imageUrl = "$fullImageUrl${product.bild1 ?? ''}";
 
                             return InkWell(
                               onTap: () {
@@ -477,19 +474,18 @@ class HomeView extends StatelessWidget {
                                             borderRadius: BorderRadius.circular(15),
                                           ),
                                           child: Center(
-                                            child: product.imageUrl != null && product.imageUrl!.isNotEmpty
-                                                ? CachedNetworkImage(
+                                            child:  CachedNetworkImage(
                                               imageUrl: product.bild1!,
-                                              placeholder: (context, url) => Center(
+                                              placeholder: (context, url) => const Center(
                                                 child: Padding(
-                                                  padding: const EdgeInsets.all(20.0),
+                                                  padding: EdgeInsets.all(20.0),
                                                   child: CircularProgressIndicator(),
                                                 ),
                                               ),
-                                              errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
+                                             errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
                                               fit: BoxFit.cover,
                                             )
-                                                : Image.asset("assets/images/no-item-found.png"),
+                                              //  : Image.asset("assets/images/no-item-found.png"),
                                           ),
                                         ),
                                       ),
@@ -503,7 +499,7 @@ class HomeView extends StatelessWidget {
                                               "${product.artikelname}",
                                               style: AppTextStyles.textTitleLight.copyWith(color: TColors.colorlightgrey),overflow: TextOverflow.ellipsis,maxLines: 2
                                             ),
-                                            SizedBox(height: 4),
+                                            const SizedBox(height: 4),
                                             Row(
                                               children: [
                                                 Text(
@@ -520,14 +516,14 @@ class HomeView extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 4),
+                                            const SizedBox(height: 4),
                                             Row(
                                               children: [
                                                 Text(
                                                   "${controller.formatPrice("${product.preisZzglMwSt}")}€",
                                                   style: AppTextStyles.textTitleMedium.copyWith(fontWeight: FontWeight.w700, fontSize: 15, color: colorsecondary),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 InkWell(onTap: () {
                                                   print("Add to card");
                                                   controller.addToCartApi("${product.id}");
@@ -549,10 +545,134 @@ class HomeView extends StatelessWidget {
                           },
                         );
                       }
-                    })
-                                    ),
-
-                                    ],
+                    })),
+                        if(controller.bundleproducts.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: Text("Bundle products",style: TextStyle(fontSize: 25,color: colorsecondary),),
+                        ),
+                        Obx(() {
+                          if (controller.bundleproducts.isEmpty) {
+                            return const Text(
+                              '',
+                              style: TextStyle(fontSize: 16, color: Colors.black54),textAlign: TextAlign.center,
+                            );
+                          } else {
+                            return
+                              SizedBox(
+                                height: height*0.4,
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 0.8,
+                                  ),
+                                  itemCount: controller.bundleproducts.length,
+                                  itemBuilder: (context, index) {
+                                    if (index >= controller.bundleproducts.length) {
+                                      return const Center(child: Text('Invalid item index'));
+                                    }
+                                    final bundleprod = controller.bundleproducts[index];
+                                   return InkWell(
+                                      onTap: () {
+                                        Get.toNamed(
+                                          Routes.DETAIL_SCREEN,
+                                          arguments: {
+                                            'products': controller.bundleproducts,
+                                            'index': index,
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: TColors.colorprimaryLight.withOpacity(.10),
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(15),
+                                                  ),
+                                                  child: Center(
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: bundleprod.bild1!,
+                                                      placeholder: (context, url) => const Center(
+                                                        child: Padding(
+                                                          padding: EdgeInsets.all(20.0),
+                                                          child: CircularProgressIndicator(),
+                                                        ),
+                                                      ),
+                                                      errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        "${bundleprod.artikelname}",
+                                                        style: AppTextStyles.textTitleLight.copyWith(color: TColors.colorlightgrey),overflow: TextOverflow.ellipsis,maxLines: 2
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "⭐️",
+                                                          style: AppTextStyles.textTitleMedium.copyWith(fontWeight: FontWeight.w700, color: TColors.colorlightgrey),
+                                                        ),
+                                                        Text(
+                                                          "${bundleprod.averageRating}",
+                                                          style: AppTextStyles.textTitleMedium.copyWith(fontWeight: FontWeight.w700, fontSize: 15, color: colorsecondary),
+                                                        ),
+                                                        Text(
+                                                          "(${bundleprod.reviewCount})",
+                                                          style: AppTextStyles.textTitleMedium.copyWith(fontWeight: FontWeight.w700, color: TColors.colorlightgrey, fontSize: 15),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "${controller.formatPrice("${bundleprod.preisZzglMwSt}")}€",
+                                                          style: AppTextStyles.textTitleMedium.copyWith(fontWeight: FontWeight.w700, fontSize: 15, color: colorsecondary),
+                                                        ),
+                                                        const Spacer(),
+                                                        InkWell(onTap: () {
+                                                          print("Add to card");
+                                                          controller.addToCartApi("${bundleprod.id}");
+                                                        },
+                                                          child: SvgPicture.asset(
+                                                            TImages.iconplus,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                          }
+                        }),
+                      ],
                     ),
                   ),
                 ),

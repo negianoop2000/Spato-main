@@ -16,6 +16,7 @@ class HomeController extends GetxController {
   var categories = ["Pools", "Attraction", "Water Maintenance", "Pipe", "Technology"].obs;
   var apiCategories = ["POOLS", "ATTRAKTIONEN", "WASSERPFLEGE", "VERROHRUNG", "TECHNIK"].obs;
   var allProductList = <ProductList>[].obs;
+  var bundleProductList = <ProductList>[].obs;
   var imagescategori = [
     "assets/icons/pool_icon.jpg",
     "assets/icons/attractionicon.jpg",
@@ -26,6 +27,7 @@ class HomeController extends GetxController {
   var selectedCategories = [false, false, false, false, false].obs;
   var isStartSearch = false.obs;
   var products = <ProductList>[].obs;
+  var bundleproducts = <ProductList>[].obs;
   var searchResults = <ProductList>[].obs;
   Timer? _debounce;
 
@@ -124,7 +126,6 @@ class HomeController extends GetxController {
 
   // Method to fetch product categories and update product list
   Future<void> productCategoriesApi() async {
-    //print("Selected Category: $selectedCategory");
     isLoading(true);
     try {
 
@@ -137,12 +138,19 @@ class HomeController extends GetxController {
       if (response != null) {
         var allProduct = response['latestProduct'] as List;
 
+        var bundleproduct = response.containsKey('bundelProduct') && response['bundelProduct'] is List
+            ? response['bundelProduct'] as List
+            : [];
+
 
 
         allProductList.clear();
+        bundleProductList.clear();
         allProductList.addAll(allProduct.map((data) => ProductList.fromJson(data)).toList());
+        bundleProductList.addAll(bundleproduct.map((data) => ProductList.fromJson(data)).toList());
 
-        var bannerData = response['bannner'];
+
+        var bannerData = response['banner'];
 
         if (bannerData is List && bannerData.isNotEmpty) {
           var banner = bannerData[0];
@@ -164,7 +172,7 @@ class HomeController extends GetxController {
 
         // Update products list
         products.value = allProductList;
-
+        bundleproducts.value = bundleProductList;
         update();
       }
     } catch (e) {

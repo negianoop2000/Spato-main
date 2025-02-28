@@ -71,34 +71,33 @@ class MyCartView extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            height: 35,
-                            width: 35,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blue,
-                              border: Border.all(
-                                color: TColors.colorlightgrey,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(0.0),
-                              child: ClipOval(
-                                child: Obx(
-                                      () => CachedNetworkImage(
-                                    imageUrl: "$fullImageUrl${controller.userImage.value}",
-                                    placeholder: (context, url) => const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(20.0),
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/profile_dummy.png")),
-                                    fit: BoxFit.cover,
-                                  ),
+                          Obx(
+                                () => controller.userImage.value.isNotEmpty
+                                ? Container(
+                              height: 35,
+                              width: 35,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue,
+                                border: Border.all(
+                                  color: TColors.colorlightgrey,
                                 ),
                               ),
-                            ),
+                              child: ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: "$fullImageUrl${controller.userImage.value}",
+                                  placeholder: (context, url) => const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Container(), // Removes the error icon
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                                : Container(), // Ensures an empty box with no "X" icon
                           ),
                           const SizedBox(width: 4),
                           Text(

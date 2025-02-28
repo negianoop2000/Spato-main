@@ -1420,10 +1420,13 @@ class DetailScreenView extends StatelessWidget {
                                                     const SizedBox(height: 4),
                                                     Row(
                                                       children: [
-                                                        Text("${product.price!}€",
-                                                            style: AppTextStyles.textTitleMedium.copyWith(
-                                                                fontWeight: FontWeight.w700,
-                                                                color: TColors.colorprimaryDark,                                                                fontSize: 15)),
+                                                        Text("${double.tryParse(product.price.toString())?.toStringAsFixed(2) ?? '0.00'}€",
+                                                          style: AppTextStyles.textTitleMedium.copyWith(
+                                                            fontWeight: FontWeight.w700,
+                                                            color: TColors.colorprimaryDark,
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
                                                         const Spacer(),
                                                         InkWell(
                                                           onTap: () {
@@ -1468,4 +1471,3 @@ class DetailScreenView extends StatelessWidget {
     );
   }
 }
-///   bacground in search

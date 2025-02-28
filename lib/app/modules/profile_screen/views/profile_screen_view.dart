@@ -98,10 +98,7 @@ class ProfileScreenView extends StatelessWidget {
                                   placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),
-                                  errorWidget: (context, url, error) => controller.userImage.value.isEmpty
-                                      ? const SizedBox()
-                                      : Center(child: Image.asset("assets/images/profile_dummy.png")),
-                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) => Container(),                                   fit: BoxFit.cover,
                                 );
                               },
                             ),
