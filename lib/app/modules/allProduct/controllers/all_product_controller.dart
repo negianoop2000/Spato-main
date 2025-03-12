@@ -4,6 +4,8 @@ import 'package:spato_mobile_app/app/data/model/category_productList.dart';
 import 'package:spato_mobile_app/app/data/model/products_list.dart';
 import 'package:spato_mobile_app/utils/constants/api_service.dart';
 
+import '../../myCart/controllers/my_cart_controller.dart';
+
 
 class AllProductController extends GetxController {
   var products = <ProductList>[].obs;
@@ -104,6 +106,8 @@ class AllProductController extends GetxController {
       );
       if (response['message'] == "Item added to cart successfully") {
         Get.snackbar('Success', response['message'], duration: Duration(seconds: 1));
+        final MyCartController cartcontroller = Get.put(MyCartController());
+        cartcontroller.cartcount.value++;
       } else {
         Get.snackbar('Error', 'Added to cart unsuccessfully', duration: Duration(seconds: 1));
       }

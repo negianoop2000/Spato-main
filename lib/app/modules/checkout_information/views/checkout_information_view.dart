@@ -134,11 +134,11 @@ class CheckoutInformationView extends StatelessWidget {
                                //
                                //  const SizedBox(height: 15,),
 
-                                if (controller.usertype.value == "b2b") ...[
+                              //  if (controller.usertype.value == "b2b") ...[
                                   _buildInputField("Company Name", controller.companynameController, "Enter Company Name",colorsecondary,background,borderColor),
                                   _buildInputField("Company Phone", controller.companyphoneController, "Enter Company Phone",colorsecondary,background,borderColor, isNumber: true),
                                   _buildInputField("Company Email", controller.companyemailController, "Enter Company Email",colorsecondary,background,borderColor),
-                                ],
+                              //  ],
 
                                 _buildInputField("Address", controller.addressController, "Address",colorsecondary,background,borderColor),
                                 _buildInputField(TTexts.txtPostalCode, controller.zipCodeController, TTexts.txttypeyourpostalcode,colorsecondary,background,borderColor,isNumber: true),

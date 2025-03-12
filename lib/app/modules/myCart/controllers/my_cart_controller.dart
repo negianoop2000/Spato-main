@@ -7,7 +7,7 @@ import 'package:spato_mobile_app/utils/constants/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyCartController extends GetxController {
-  final count = 0.obs;
+  final cartcount = 0.obs;
   var isLoading = false.obs;
   var couponCodeController = TextEditingController().obs;
   var userName = ''.obs;
@@ -28,7 +28,7 @@ class MyCartController extends GetxController {
     for (var product in productsClaim) {
       totalItems += product.count; // Summing all product counts
     }
-    count.value = totalItems; // Updating the observable count variable
+    cartcount.value = totalItems; // Updating the observable count variable
   }
 
 
@@ -200,6 +200,12 @@ class MyCartController extends GetxController {
         productsClaim.refresh();
         await getCartItemsApi();
         Get.snackbar('Success', response['message'], duration: Duration(seconds: 1));
+        final MyCartController cartcontroller = Get.put(MyCartController());
+        cartcontroller.cartcount.value = cartcount.value;
+        if(isCartEmpty.value==true){
+          cartcontroller.cartcount.value = 0;
+        }
+
       } else {
         //    Get.snackbar('Error', 'Item delete unsuccessful.', duration: Duration(seconds: 1));
       }

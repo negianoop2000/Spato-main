@@ -237,7 +237,12 @@ class MyCartView extends StatelessWidget {
                                             InkWell(
                                               onTap: () {
                                                 controller.decrementCount(index);
+
                                                 controller.updateCartApi(product.id.toString(), product.count);
+                                                if(product.count!=1) {
+                                                  final MyCartController cartcontroller = Get.put(MyCartController());
+                                                  cartcontroller.cartcount.value--;
+                                                }
                                                 if (!controller.isCartEmpty.value){
                                                   controller.couponCode(
                                                     controller.couponCodeController.value.text,
@@ -256,6 +261,8 @@ class MyCartView extends StatelessWidget {
                                               onTap: () {
                                                 controller.incrementCount(index);
                                                 controller.updateCartApi(product.id.toString(), product.count);
+                                                final MyCartController cartcontroller = Get.put(MyCartController());
+                                                cartcontroller.cartcount.value++;
                                                 if (!controller.isCartEmpty.value){
                                                   controller.couponCode(
                                                     controller.couponCodeController.value.text,
@@ -293,24 +300,52 @@ class MyCartView extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(height: 15),
-                      CommonAppButton(
-                        width: double.infinity,
-                        color: TColors.colorprimaryLight,
-                        onPressed: () {
-                          if (!controller.isCartEmpty.value){
-                            Get.toNamed(Routes.CHECKOUT_SHIPPING);
-                            controller.savePreferences();
-                          }
-                          else {
-                            Get.snackbar("Can't Checkout",
-                                "Please add Product in your cart",
-                                duration: const Duration(seconds: 1));
-                          }
+                      Row(
+                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: CommonAppButton(
+                              width: double.infinity,
+                              color: TColors.colorprimaryLight,
+                              onPressed: () {
+                                if (!controller.isCartEmpty.value){
+                                  Get.toNamed(Routes.CHECKOUT_SHIPPING);
+                                  controller.savePreferences();
+                                }
+                                else {
+                                  Get.snackbar("Can't Checkout",
+                                      "Please add Product in your cart",
+                                      duration: const Duration(seconds: 1));
+                                }
+                            
+                            
+                              },
+                              buttonText: "Checkout",
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: CommonAppButton(
+                              width: double.infinity,
+                              color: TColors.colorprimaryLight,
+                              onPressed: () {
+                                if (!controller.isCartEmpty.value){
+                                  controller.couponCode(
+                                    controller.couponCodeController.value.text,
+                                    controller.orderTotal.value,
+                                  );
+                                }
+                                else {
+                                  Get.snackbar("Can't Checkout", "Please add Product in your cart", duration: const Duration(seconds: 1));
+                                }
+                              },
+                              buttonText: "Apply Coupon",
+                            ),
+                          )
 
-
-                        },
-                        buttonText: "Checkout",
+                        ],
                       ),
+
                       const SizedBox(height: 10),
                       GestureDetector( onTap: (){
                         controller.launchInBrowser(Uri.parse('https://spa2.de/lieferbedingungen'));
@@ -350,22 +385,6 @@ class MyCartView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      CommonAppButton(
-                        width: double.infinity,
-                        color: TColors.colorprimaryLight,
-                        onPressed: () {
-                          if (!controller.isCartEmpty.value){
-                            controller.couponCode(
-                              controller.couponCodeController.value.text,
-                              controller.orderTotal.value,
-                            );
-                          }
-                          else {
-                            Get.snackbar("Can't Checkout", "Please add Product in your cart", duration: const Duration(seconds: 1));
-                          }
-                        },
-                        buttonText: "Apply Coupon",
-                      ),
                     ],
                   ),
                 ),

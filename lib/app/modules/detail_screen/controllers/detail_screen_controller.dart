@@ -17,6 +17,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../myCart/controllers/my_cart_controller.dart';
+
 
 class DetailScreenController extends GetxController {
   var isLoading = false.obs;
@@ -299,6 +301,8 @@ class DetailScreenController extends GetxController {
       );
       if (response['message'] == "Item added to cart successfully") {
         Get.snackbar('Success', response['message'],duration: Duration(seconds: 1));
+        final MyCartController cartcontroller = Get.put(MyCartController());
+        cartcontroller.cartcount.value++;
       } else {
      //   Get.snackbar('Error', 'Added to cart unsuccessfully',duration: Duration(seconds: 1));
       }
@@ -316,6 +320,8 @@ class DetailScreenController extends GetxController {
       );
       if (response['message'] == "Item added to cart successfully") {
         Get.snackbar('Success', response['message'],duration: Duration(seconds: 1));
+        final MyCartController cartcontroller = Get.put(MyCartController());
+        cartcontroller.cartcount.value++;
       } else {
      //   Get.snackbar('Error', 'Added to cart unsuccessfully',duration: Duration(seconds: 1));
       }

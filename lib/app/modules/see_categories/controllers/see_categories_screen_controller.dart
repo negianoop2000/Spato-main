@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../utils/constants/api_service.dart';
 import '../../../data/model/category_productList.dart';
 import '../../../routes/app_pages.dart';
+import '../../myCart/controllers/my_cart_controller.dart';
 
 class SeeCategoriesController extends GetxController {
   final count = 0.obs;
@@ -138,6 +139,8 @@ class SeeCategoriesController extends GetxController {
       if (response['message'] == "Item added to cart successfully") {
         Get.snackbar('Success', response['message'], duration: Duration(seconds: 1));
         update();
+        final MyCartController cartcontroller = Get.put(MyCartController());
+        cartcontroller.cartcount.value++;
       } else {
         //   Get.snackbar('Error', 'Added to cart unsuccessfully');
       }

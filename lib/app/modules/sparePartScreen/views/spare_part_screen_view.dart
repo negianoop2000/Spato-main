@@ -69,8 +69,11 @@ class SparePartScreenView extends StatelessWidget {
               double verticalOffset = (controller.verticalScrollController.position.maxScrollExtent / 2);
               double horizontalOffset = (controller.horizontalScrollController.position.maxScrollExtent / 2);
               print("$verticalOffset ------- $horizontalOffset");
-              controller.verticalScrollController.jumpTo(verticalOffset);
-              controller.horizontalScrollController.jumpTo(horizontalOffset);
+            //  controller.verticalScrollController.jumpTo(verticalOffset);
+              //controller.horizontalScrollController.jumpTo(horizontalOffset);
+
+              controller.verticalScrollController.jumpTo(0);
+              controller.horizontalScrollController.jumpTo(0);
             }
           });
 
@@ -306,115 +309,3 @@ class SparePartScreenView extends StatelessWidget {
 
 
 
-// Container(
-//                               width: MediaQuery.of(context).size.width,
-//                               height: MediaQuery.of(context).size.width, // Ensure square aspect
-//                               child: Stack(
-//                                 children: [
-//                                   Obx(() {
-//                                     if (controller.tapPosition.value != null) {
-//                                       return Positioned(
-//                                         left: controller.tapPosition.value!.dx - 10,
-//                                         top: controller.tapPosition.value!.dy - 10,
-//                                         child: Container(
-//                                           width: 100,
-//                                           height: 100,
-//                                           decoration: BoxDecoration(
-//                                             shape: BoxShape.circle,
-//                                             color: Colors.black,
-//                                           ),
-//                                         ),
-//                                       );
-//                                     }
-//                                     return SizedBox.shrink();
-//                                   }),
-//                                   Scrollbar(
-//                                     controller: controller.verticalScrollController,
-//                                     trackVisibility: true,
-//                                     thumbVisibility: true,
-//                                     child: SingleChildScrollView(
-//                                       controller: controller.verticalScrollController,
-//                                       scrollDirection: Axis.vertical,
-//                                       child: Container(
-//                                         width: 1300,
-//                                         height: 1300,
-//                                         child: Scrollbar(
-//                                           controller: controller.horizontalScrollController,
-//                                           trackVisibility: true,
-//                                           thumbVisibility: true,
-//                                           child: SingleChildScrollView(
-//                                             controller: controller.horizontalScrollController,
-//                                             scrollDirection: Axis.horizontal,
-//                                             child: GestureDetector(
-//                                               key: _imageKey,
-//                                               onTapUp: (details) {
-//                                                 final RenderBox renderBox = _imageKey.currentContext!.findRenderObject() as RenderBox;
-//                                                 double adjustedX = details.localPosition.dx * (1300 / renderBox.size.width);
-//                                                 double adjustedY = details.localPosition.dy * (1300 / renderBox.size.width);
-//                                                 controller.extractText_sparePart(adjustedX.toString(), adjustedY.toString(), sparePart.productId.toString());
-//
-//                                                 // Update the tap position
-//                                                 controller.tapPosition.value = Offset(adjustedX, adjustedY);
-//                                                 print("sdbbdsdsba");
-//                                                 print(controller.tapPosition.value );
-//                                               },
-//                                               child: CachedNetworkImage(
-//                                                 imageUrl: "https://spa2.de/storage/spare_part/images/${sparePart.articleImage}",
-//                                                 placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-//                                                 errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
-//                                                 fit: BoxFit.cover,
-//                                               ),
-//                                             ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ),
-//
-//                                 ],
-//                               ),
-//                             ),
-
-
-
-//   Container(
-//   width:  MediaQuery.of(context).size.width,
-//   height: MediaQuery.of(context).size.width, // Ensure square aspect
-//   child: Scrollbar(
-//     controller: controller.verticalScrollController,
-//     trackVisibility: true,
-//     thumbVisibility: true,
-//     child: SingleChildScrollView(
-//       controller: controller.verticalScrollController,
-//       scrollDirection: Axis.vertical,
-//       child: Container(
-//         width: 1300,
-//         height: 1300,
-//         child: Scrollbar(
-//           controller: controller.horizontalScrollController,
-//           trackVisibility: true,
-//           thumbVisibility: true,
-//           child: SingleChildScrollView(
-//             controller: controller.horizontalScrollController,
-//             scrollDirection: Axis.horizontal,
-//             child: GestureDetector(
-//               key: _imageKey,
-//               onTapUp: (details) {
-//                 final RenderBox renderBox = _imageKey.currentContext!.findRenderObject() as RenderBox;
-//                 double adjustedX = details.localPosition.dx * (1300 / renderBox.size.width);
-//                 double adjustedY = details.localPosition.dy * (1300 / renderBox.size.width);
-//                 controller.extractText_sparePart(adjustedX.toString(), adjustedY.toString(), sparePart.productId.toString());
-//               },
-//               child: CachedNetworkImage(
-//                 imageUrl: "https://spa2.de/storage/spare_part/images/${sparePart.articleImage}",
-//                 placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-//                 errorWidget: (context, url, error) => Center(child: Image.asset("assets/images/no-item-found.png")),
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     ),
-//   ),
-// ),

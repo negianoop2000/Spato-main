@@ -154,7 +154,7 @@ class _BottomNavigationTapState extends State<BottomNavigationTap> {
                   ),
                   BottomNavigationBarItem(
                     icon:Obx(() {
-                     int Count = cartcontroller.count.value;
+                     int Count = cartcontroller.cartcount.value;
                        return badges.Badge(
                       showBadge: Count > 0,
                    badgeContent: Text(
